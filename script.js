@@ -14,13 +14,8 @@ const ctx = canvas.getContext('2d');
 const STORAGE_KEY = 'jeff860-snake-best-score';
 const BOARD_SIZE = 20;
 const BASE_SPEED = 180;
-const FAST_MULTIPLIER = 2;
-const SIZES = {
-  xl: 'size-xl',
-  l: 'size-l',
-  m: 'size-m',
-  s: 'size-s',
-};
+const FAST_SPEED = 90;
+const SIZES = { xl: 'size-xl', l: 'size-l', m: 'size-m', s: 'size-s' };
 
 const state = {
   status: 'ready',
@@ -33,25 +28,23 @@ const state = {
   fastMode: false,
   timerId: null,
   size: 'm',
+  pressedShifts: new Set(),
 };
 
 function setStatus(message) {
-  if (boardStatusEl) {
-    boardStatusEl.textContent = message;
-  }
+  if (boardStatusEl) boardStatusEl.textContent = message;
 }
 
 function renderStats() {
   if (scoreEl) scoreEl.textContent = String(state.score);
   if (bestScoreEl) bestScoreEl.textContent = String(state.bestScore);
   if (gameStateEl) {
-    const labelMap = {
+    gameStateEl.textContent = {
       ready: 'Ready',
       running: 'Running',
       paused: 'Paused',
       over: 'Game Over',
-    };
-    gameStateEl.textContent = labelMap[state.status] || 'Ready';
+    }[state.status] || 'Ready';
   }
 }
 
@@ -75,6 +68,35 @@ function getRandomFood() {
   return food;
 }
 
+function clearLoop() {
+  if (state.timerId !== null) {
+    window.clearInterval(state.timerId);
+    state.timerId = null;
+  }
+}
+
+function currentInterval() {
+  return state.fastMode ? FAST_SPEED : BASE_SPEED;
+}
+
+function startLoop() {
+  clearLoop();
+  if (state.status === 'running') {
+    state.timerId = window.setInterval(tick, currentInterval());
+  }
+}
+
+function syncSpeedMode() {
+  const nextFastMode = state.pressedShifts.size > 0;
+  if (nextFastMode === state.fastMode) {
+    return;
+  }
+  state.fastMode = nextFastMode;
+  if (state.status === 'running') {
+    startLoop();
+  }
+}
+
 function resetGame() {
   state.snake = [
     { x: 9, y: 10 },
@@ -87,64 +109,42 @@ function resetGame() {
   state.score = 0;
   state.fastMode = false;
   state.status = 'ready';
+  state.pressedShifts.clear();
   clearLoop();
   renderStats();
-  setStatus('방향키, WASD, 모바일 버튼으로 시작하세요.');
+  setStatus('Use arrow keys, WASD, or mobile buttons.');
   draw();
 }
 
-function clearLoop() {
-  if (state.timerId !== null) {
-    window.clearInterval(state.timerId);
-    state.timerId = null;
-  }
-}
-
-function currentInterval() {
-  return Math.max(60, Math.round(BASE_SPEED / (state.fastMode ? FAST_MULTIPLIER : 1)));
-}
-
-function ensureLoop() {
-  if (state.timerId !== null) {
-    return;
-  }
-  state.timerId = window.setInterval(tick, currentInterval());
-}
-
-function restartLoop() {
-  clearLoop();
-  ensureLoop();
-}
-
-function startGame(message = '게임 시작') {
+function startGame(message = 'Game started') {
   if (state.status === 'over') {
     resetGame();
   }
   state.status = 'running';
   setStatus(message);
   renderStats();
-  restartLoop();
+  startLoop();
 }
 
 function pauseGame() {
   if (state.status === 'running') {
     state.status = 'paused';
     clearLoop();
-    setStatus('일시정지 상태입니다.');
+    setStatus('Paused.');
     renderStats();
     return;
   }
 
   if (state.status === 'paused') {
     state.status = 'running';
-    setStatus('게임 재개');
+    setStatus('Resumed.');
     renderStats();
-    restartLoop();
+    startLoop();
     return;
   }
 
   if (state.status === 'ready') {
-    startGame('게임 시작');
+    startGame('Game started');
   }
 }
 
@@ -156,16 +156,14 @@ function endGame() {
     localStorage.setItem(STORAGE_KEY, String(state.bestScore));
   }
   renderStats();
-  setStatus('게임 오버. Restart 또는 Start로 다시 시작하세요.');
+  setStatus('Game over. Restart to play again.');
 }
 
 function setDirection(nextDirection) {
   if (!nextDirection) return;
-  const current = state.direction;
+  const current = state.queuedDirection.x || state.queuedDirection.y ? state.queuedDirection : state.direction;
   const isReverse = current.x + nextDirection.x === 0 && current.y + nextDirection.y === 0;
-  if (state.snake.length > 1 && isReverse) {
-    return;
-  }
+  if (state.snake.length > 1 && isReverse) return;
   state.queuedDirection = nextDirection;
 }
 
@@ -179,14 +177,12 @@ function moveSnake() {
 
   const hitWall = nextHead.x < 0 || nextHead.y < 0 || nextHead.x >= BOARD_SIZE || nextHead.y >= BOARD_SIZE;
   const hitSelf = state.snake.some((segment) => isSamePoint(segment, nextHead));
-
   if (hitWall || hitSelf) {
     endGame();
     return;
   }
 
   state.snake.unshift(nextHead);
-
   if (isSamePoint(nextHead, state.food)) {
     state.score += 10;
     if (state.score > state.bestScore) {
@@ -194,7 +190,7 @@ function moveSnake() {
       localStorage.setItem(STORAGE_KEY, String(state.bestScore));
     }
     state.food = getRandomFood();
-    setStatus(state.fastMode ? '정상 속도보다 빠르게 이동 중입니다.' : '먹이를 먹었습니다!');
+    setStatus(state.fastMode ? 'Fast mode active.' : 'Food collected.');
   } else {
     state.snake.pop();
   }
@@ -203,14 +199,9 @@ function moveSnake() {
 }
 
 function tick() {
-  if (state.status !== 'running') {
-    return;
-  }
+  if (state.status !== 'running') return;
   moveSnake();
   draw();
-  if (state.status === 'running') {
-    restartLoop();
-  }
 }
 
 function drawCell(x, y, fillStyle, glow = false) {
@@ -240,32 +231,6 @@ function drawGrid() {
   }
 }
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  bgGradient.addColorStop(0, '#07100a');
-  bgGradient.addColorStop(1, '#030603');
-  ctx.fillStyle = bgGradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  drawGrid();
-
-  state.snake.forEach((segment, index) => {
-    const head = index === 0;
-    drawCell(segment.x, segment.y, head ? '#b8ffd0' : '#3eb86f', head);
-  });
-
-  drawCell(state.food.x, state.food.y, '#7aff68', true);
-
-  if (state.status === 'paused') {
-    overlayText('PAUSED');
-  } else if (state.status === 'ready') {
-    overlayText('READY');
-  } else if (state.status === 'over') {
-    overlayText('GAME OVER');
-  }
-}
-
 function overlayText(text) {
   ctx.save();
   ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
@@ -278,11 +243,29 @@ function overlayText(text) {
   ctx.restore();
 }
 
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  bgGradient.addColorStop(0, '#07100a');
+  bgGradient.addColorStop(1, '#030603');
+  ctx.fillStyle = bgGradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  drawGrid();
+
+  state.snake.forEach((segment, index) => {
+    drawCell(segment.x, segment.y, index === 0 ? '#b8ffd0' : '#3eb86f', index === 0);
+  });
+  drawCell(state.food.x, state.food.y, '#7aff68', true);
+
+  if (state.status === 'paused') overlayText('PAUSED');
+  if (state.status === 'ready') overlayText('READY');
+  if (state.status === 'over') overlayText('GAME OVER');
+}
+
 function setSize(size) {
   state.size = size;
-  if (boardWrap) {
-    boardWrap.className = `game-board-wrap ${SIZES[size]}`;
-  }
+  if (boardWrap) boardWrap.className = `game-board-wrap ${SIZES[size]}`;
   sizeButtons.forEach((button) => {
     button.classList.toggle('is-active', button.dataset.size === size);
   });
@@ -306,42 +289,34 @@ function directionFromKey(key) {
   return map[key] || null;
 }
 
-function handleMove(direction, speedBoost = false) {
+function handleMove(direction) {
   if (state.status === 'ready') {
-    startGame('게임 시작');
-  } else if (state.status === 'paused') {
-    state.status = 'running';
-    renderStats();
-    restartLoop();
+    startGame('Game started');
   } else if (state.status === 'over') {
     resetGame();
-    startGame('게임 재시작');
+    startGame('Game restarted');
   }
 
-  state.fastMode = Boolean(speedBoost);
-  if (state.timerId !== null) {
-    restartLoop();
-  }
   setDirection(direction);
   if (state.status === 'running') {
-    setStatus(state.fastMode ? '빠른 이동 모드' : '이동 중');
+    setStatus(state.fastMode ? 'Fast mode active.' : 'Moving.');
   }
 }
 
 function handleKeyDown(event) {
-  const direction = directionFromKey(event.key);
-  if (direction) {
-    event.preventDefault();
-    handleMove(direction, event.shiftKey);
+  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+    if (!event.repeat) {
+      state.pressedShifts.add(event.code);
+      syncSpeedMode();
+    }
     return;
   }
 
-  if (event.key === 'Shift') {
-    state.fastMode = true;
-    if (state.status === 'running') {
-      restartLoop();
-      setStatus('빠른 이동 모드');
-    }
+  const direction = directionFromKey(event.key);
+  if (direction) {
+    event.preventDefault();
+    handleMove(direction);
+    return;
   }
 
   if (event.key === ' ' || event.key === 'Spacebar') {
@@ -351,12 +326,9 @@ function handleKeyDown(event) {
 }
 
 function handleKeyUp(event) {
-  if (event.key === 'Shift') {
-    state.fastMode = false;
-    if (state.status === 'running') {
-      restartLoop();
-      setStatus('게임 진행 중');
-    }
+  if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+    state.pressedShifts.delete(event.code);
+    syncSpeedMode();
   }
 }
 
@@ -376,49 +348,39 @@ if (navToggle && siteNav) {
 }
 
 sizeButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    setSize(button.dataset.size || 'm');
-  });
+  button.addEventListener('click', () => setSize(button.dataset.size || 'm'));
 });
 
 actionButtons.forEach((button) => {
   button.addEventListener('click', () => {
     const action = button.dataset.action;
-    if (action === 'start') {
-      startGame('게임 시작');
-    } else if (action === 'pause') {
-      pauseGame();
-    } else if (action === 'restart') {
+    if (action === 'start') startGame('Game started');
+    if (action === 'pause') pauseGame();
+    if (action === 'restart') {
       resetGame();
-      startGame('게임 재시작');
-    } else if (action === 'toggle') {
-      pauseGame();
+      startGame('Game restarted');
     }
+    if (action === 'toggle') pauseGame();
   });
 });
 
 dpadButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    const direction = directionFromKey(
-      button.dataset.dir === 'up' ? 'ArrowUp'
-        : button.dataset.dir === 'down' ? 'ArrowDown'
-        : button.dataset.dir === 'left' ? 'ArrowLeft'
-        : 'ArrowRight',
-    );
-    if (direction) {
-      handleMove(direction, false);
-    }
+    const direction = {
+      up: { x: 0, y: -1 },
+      down: { x: 0, y: 1 },
+      left: { x: -1, y: 0 },
+      right: { x: 1, y: 0 },
+    }[button.dataset.dir];
+    if (direction) handleMove(direction);
   });
 });
 
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
 window.addEventListener('blur', () => {
-  if (state.status === 'running') {
-    pauseGame();
-  }
+  if (state.status === 'running') pauseGame();
 });
-
 window.addEventListener('resize', draw);
 
 resetGame();
