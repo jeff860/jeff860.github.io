@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jeff Park | Professional Profile</title>
-  <meta name="description" content="반응형 개인 프로페셔널 웹사이트와 Games 영역을 포함한 포트폴리오">
+  <title>JEFF860 | Professional Profile</title>
+  <meta name="description" content="메트릭스 느낌의 반응형 개인 프로페셔널 웹사이트와 지렁이 게임">
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문 바로가기</a>
+  <div class="matrix-fog" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="shell header-inner">
@@ -28,7 +29,9 @@
       <nav id="site-nav" class="site-nav" aria-label="주요 메뉴">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#research">Research</a>
         <a href="#games">Games</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -37,60 +40,150 @@
 
   <main id="main">
     <section id="home" class="hero shell">
-      <p class="eyebrow">Matrix-inspired · Responsive · Static</p>
+      <p class="eyebrow">Matrix-inspired · Static · Responsive</p>
       <h1>반응형 개인 프로페셔널 웹사이트</h1>
       <p class="hero-copy">
         깔끔한 정보 구조와 메트릭스 분위기를 함께 담은 정적 사이트입니다.
-        프로필 상세 정보는 아직 확정되지 않아 <strong>[사람 확인 필요]</strong> 상태로 유지합니다.
+        확인되지 않은 프로필 정보는 <strong>[사람 확인 필요]</strong>로 남깁니다.
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="#games">Games 보기</a>
-        <a class="button secondary" href="#about">프로필 섹션</a>
+        <a class="button primary" href="#games">Games 열기</a>
+        <a class="button secondary" href="#about">프로필 살펴보기</a>
+      </div>
+      <div class="status-strip" aria-label="게임 조작 안내">
+        <span>방향키 / WASD</span>
+        <span>Shift + 방향키 = 2x speed</span>
+        <span>모바일 버튼 지원</span>
       </div>
     </section>
 
     <section id="about" class="panel shell">
       <div class="section-head">
         <p>About</p>
-        <h2>프로필 영역</h2>
+        <h2>프로필</h2>
       </div>
       <div class="grid two-up">
         <article class="card">
           <h3>소개</h3>
-          <p>[사람 확인 필요] 소개 문구를 여기 채웁니다.</p>
+          <p>[사람 확인 필요] 한 줄 소개를 작성합니다.</p>
         </article>
         <article class="card">
-          <h3>경력</h3>
-          <p>[사람 확인 필요] 경력과 대표 성과를 정리합니다.</p>
+          <h3>핵심 가치</h3>
+          <p>정적 구현, 반응형 구성, 작은 단위의 안전한 수정, 게임 UX의 안정성을 우선합니다.</p>
         </article>
       </div>
     </section>
 
-    <section id="skills" class="panel shell">
+    <section id="projects" class="panel shell">
       <div class="section-head">
-        <p>Skills</p>
-        <h2>기술 요약</h2>
+        <p>Projects</p>
+        <h2>프로젝트</h2>
       </div>
-      <div class="tag-list" aria-label="기술 목록">
-        <span>HTML</span>
-        <span>CSS</span>
-        <span>JavaScript</span>
-        <span>[사람 확인 필요]</span>
+      <div class="grid three-up">
+        <article class="card">
+          <h3>Portfolio Shell</h3>
+          <p>반응형 내비게이션과 섹션 중심의 정적 사이트 골격.</p>
+        </article>
+        <article class="card">
+          <h3>Snake Game</h3>
+          <p>키보드, WASD, 모바일 버튼, 점수, 충돌, 재시작, 최고 점수.</p>
+        </article>
+        <article class="card">
+          <h3>[사람 확인 필요]</h3>
+          <p>검증된 추가 프로젝트는 이후에 연결합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience" class="panel shell">
+      <div class="section-head">
+        <p>Experience</p>
+        <h2>경험</h2>
+      </div>
+      <div class="grid two-up">
+        <article class="card">
+          <h3>[사람 확인 필요]</h3>
+          <p>경력 요약, 직무, 기간, 담당 업무를 채워 넣습니다.</p>
+        </article>
+        <article class="card">
+          <h3>운영 원칙</h3>
+          <p>가독성, 접근성, 반응형, 그리고 되돌리기 쉬운 변경을 우선합니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="research" class="panel shell">
+      <div class="section-head">
+        <p>Research</p>
+        <h2>리서치</h2>
+      </div>
+      <div class="grid two-up">
+        <article class="card">
+          <h3>탐구 주제</h3>
+          <p>인터랙션 디자인, 정적 사이트 구조, 게임 입력 안정성.</p>
+        </article>
+        <article class="card">
+          <h3>[사람 확인 필요]</h3>
+          <p>논문, 발표, 실험 결과 등 검증된 내용이 생기면 추가합니다.</p>
+        </article>
       </div>
     </section>
 
     <section id="games" class="panel shell">
       <div class="section-head">
         <p>Games</p>
-        <h2>지렁이 게임 준비 영역</h2>
+        <h2>지렁이 게임</h2>
       </div>
-      <div class="card games-preview">
-        <p>지금은 게임 진입점과 UI 뼈대만 준비된 상태입니다.</p>
-        <ul>
-          <li>키보드와 모바일 터치 조작 준비</li>
-          <li>Shift + 방향키 속도 2배 규칙 준비</li>
-          <li>게임 화면 크기 조절 준비: 최대, 대, 중, 소</li>
-        </ul>
+
+      <div class="game-shell card">
+        <div class="game-top">
+          <div>
+            <p class="game-label">Score</p>
+            <strong id="score">0</strong>
+          </div>
+          <div>
+            <p class="game-label">Best</p>
+            <strong id="best-score">0</strong>
+          </div>
+          <div>
+            <p class="game-label">State</p>
+            <strong id="game-state">Ready</strong>
+          </div>
+        </div>
+
+        <div class="game-toolbar">
+          <button type="button" class="button mini" data-action="start">Start</button>
+          <button type="button" class="button mini" data-action="pause">Pause</button>
+          <button type="button" class="button mini" data-action="restart">Restart</button>
+          <div class="size-group" role="group" aria-label="게임 화면 크기">
+            <button type="button" class="button mini" data-size="xl">최대</button>
+            <button type="button" class="button mini" data-size="l">대</button>
+            <button type="button" class="button mini is-active" data-size="m">중</button>
+            <button type="button" class="button mini" data-size="s">소</button>
+          </div>
+        </div>
+
+        <div class="game-body">
+          <div class="game-board-wrap size-m" id="board-wrap">
+            <div class="board-status" id="board-status">방향키, WASD, 모바일 버튼으로 시작하세요.</div>
+            <canvas id="game-canvas" width="640" height="640" aria-label="지렁이 게임 보드"></canvas>
+          </div>
+
+          <div class="controls card">
+            <p class="control-note">모바일 조작</p>
+            <div class="dpad" aria-label="모바일 방향 버튼">
+              <span></span>
+              <button type="button" data-dir="up">▲</button>
+              <span></span>
+              <button type="button" data-dir="left">◀</button>
+              <button type="button" data-action="toggle">⏯</button>
+              <button type="button" data-dir="right">▶</button>
+              <span></span>
+              <button type="button" data-dir="down">▼</button>
+              <span></span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -99,7 +192,16 @@
         <p>Contact</p>
         <h2>연락처</h2>
       </div>
-      <p class="contact-copy">[사람 확인 필요] 연락처, 이메일, SNS 링크를 연결합니다.</p>
+      <div class="grid two-up">
+        <article class="card">
+          <h3>Email</h3>
+          <p>[사람 확인 필요]</p>
+        </article>
+        <article class="card">
+          <h3>Links</h3>
+          <p>[사람 확인 필요] GitHub, LinkedIn, Blog 링크를 연결합니다.</p>
+        </article>
+      </div>
     </section>
   </main>
 </body>
