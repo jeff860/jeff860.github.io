@@ -305,10 +305,9 @@ function handleMove(direction) {
 
 function handleKeyDown(event) {
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
-    if (!event.repeat) {
-      state.pressedShifts.add(event.code);
-      syncSpeedMode();
-    }
+    event.preventDefault();
+    state.pressedShifts.add(event.code);
+    syncSpeedMode();
     return;
   }
 
@@ -327,6 +326,7 @@ function handleKeyDown(event) {
 
 function handleKeyUp(event) {
   if (event.code === 'ShiftLeft' || event.code === 'ShiftRight') {
+    event.preventDefault();
     state.pressedShifts.delete(event.code);
     syncSpeedMode();
   }
