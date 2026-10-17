@@ -97,10 +97,10 @@
 
     const rows = [];
     if (liveAccountId && !liveAccountSaved) {
-        rows.push({ id: '__temp__', name: liveAccountName || liveAccountId, timestamp: null, isTemp: true });
+        rows.push({ id: '__temp__', name: liveAccountName || liveAccountId, timestamp: null, isTemp: true, channelId: liveAccountId });
     }
     actualAccounts.forEach(item => {
-        rows.push({ id: item.id, name: item.name, timestamp: item.timestamp, isTemp: false });
+        rows.push({ id: item.id, name: item.name, timestamp: item.timestamp, isTemp: false, channelId: item.id });
     });
 
     for (const row of rows) {
@@ -117,28 +117,39 @@
     }
 
     if (rows.length > 0) {
+        // 주의: 계정 이름(row.name)은 YouTube 채널 제목으로 사용자가 임의로 정할 수 있는 값이다.
+        // escapeHtml()로 감싸도 onclick="...('${row.name}')" 같은 인라인 이벤트 속성에 문자열로 끼워 넣으면,
+        // 브라우저가 속성값을 HTML 디코딩한 뒤에야 JS로 실행하기 때문에 따옴표 escape가 뚫려 임의 코드 실행이 가능하다.
+        // 그래서 버튼에는 데이터를 직접 넣지 않고, 아래에서 addEventListener로만 연결한다.
         listEl.innerHTML = rows.map(row => `
             <div style="margin-bottom:8px; display:flex; align-items:center; border-bottom: 1px solid var(--hover); padding-bottom: 5px;">
                 <input type="checkbox" value="${row.id}" id="acct_${row.id}" ${selectedAccountIds.has(row.id) ? 'checked' : ''} style="margin-right:8px;">
                 <label for="acct_${row.id}" style="flex-grow:1; cursor:pointer;">
-                    ${row.isTemp ? '🧠 ' : ''}${escapeHtml(row.name)}${row.isTemp ? ' - 임시 데이터' : ' - ' + (row.timestamp || '저장안됨')}
+                    ${row.isTemp ? '🧠 ' : ''}${escapeHtml(row.name)} <span style="color:var(--text-dim); font-size:11px;">(${escapeHtml(shortId(row.channelId))})</span>${row.isTemp ? ' - 임시 데이터' : ' - ' + (row.timestamp || '저장안됨')}
                     <span ${row.isTemp ? 'id="tempCountsSpan"' : ''} style="color:var(--text-dim); font-size:11px;"> · 영상 ${row.videoCount.toLocaleString()}개 · 구독 ${row.subCount.toLocaleString()}개</span>
                 </label>
                 ${row.isTemp
-                    ? `<button class="primary" onclick="saveCurrentData()" style="margin-left:8px; white-space:nowrap; font-size:12px; padding:4px 10px;">현재 데이터 저장</button>`
-                    : `<button onclick="deleteAccount('${row.id}', '${escapeHtml(row.name)}')" style="background:#cc0000; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:8px;">삭제</button>`}
+                    ? `<button class="primary save-current-btn" style="margin-left:8px; white-space:nowrap; font-size:12px; padding:4px 10px;">현재 데이터 저장</button>`
+                    : `<button class="delete-account-btn" style="background:#cc0000; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:8px;">삭제</button>`}
             </div>
         `).join('');
         savedSection.style.display = 'block';
 
         rows.forEach(row => {
             const cb = document.getElementById('acct_' + row.id);
-            if (cb) {
-                cb.addEventListener('change', (e) => {
-                    if (e.target.checked) selectedAccountIds.add(row.id);
-                    else selectedAccountIds.delete(row.id);
-                    onSelectionChange();
-                });
+            if (!cb) return;
+            const rowEl = cb.closest('div');
+            cb.addEventListener('change', (e) => {
+                if (e.target.checked) selectedAccountIds.add(row.id);
+                else selectedAccountIds.delete(row.id);
+                onSelectionChange();
+            });
+            if (row.isTemp) {
+                const saveBtn = rowEl && rowEl.querySelector('.save-current-btn');
+                if (saveBtn) saveBtn.addEventListener('click', () => { saveCurrentData(); });
+            } else {
+                const delBtn = rowEl && rowEl.querySelector('.delete-account-btn');
+                if (delBtn) delBtn.addEventListener('click', () => { deleteAccount(row.id, row.name); });
             }
         });
     } else {
@@ -338,6 +349,12 @@
     const pad = n => String(n).padStart(2, '0');
     const yy = String(d.getFullYear()).slice(-2);
     return `${yy}.${pad(d.getMonth()+1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  // 같은 이름(채널 제목)을 가진 다른 계정과 구분하기 위해 채널ID 뒷부분 일부를 표시용으로 잘라낸다
+  function shortId(id){
+    if (!id) return '';
+    return id.length > 6 ? id.slice(-6) : id;
   }
 
   // 불러온 데이터는 '저장'을 누르기 전까지 sessionStorage에만 머문다 (탭/브라우저 닫으면 삭제)
@@ -724,7 +741,7 @@
       const targetTab = btn.dataset.tab;
       // 내 댓글 탭 클릭 시 바로 Google 활동 내역 페이지를 새 탭으로 연결
       if(targetTab === 'comments'){
-        window.open('https://myactivity.google.com/page?hl=ko&utm_source=youtube&page=youtube_comments', '_blank');
+        window.open('https://myactivity.google.com/page?hl=ko&utm_source=youtube&page=youtube_comments', '_blank', 'noopener,noreferrer');
         return;
       }
       currentPlaylist = null;
@@ -1484,7 +1501,7 @@
           if(query){
             targetUrl += '/search?query=' + encodeURIComponent(query);
           }
-          window.open(targetUrl, '_blank');
+          window.open(targetUrl, '_blank', 'noopener,noreferrer');
         });
       });
     }
