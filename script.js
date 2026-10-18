@@ -1,7 +1,6 @@
 (function(){
   const clientIdInput = document.getElementById('clientIdInput');
   const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
   const statusLine = document.getElementById('statusLine');
   const errMsg = document.getElementById('errMsg');
   const progressBar = document.getElementById('progressBar');
@@ -17,7 +16,6 @@
   const pagerTop = document.getElementById('pagerTop');
   const searchInput = document.getElementById('searchInput');
   const channelQueryInput = document.getElementById('channelQueryInput');
-  const regionSelect = document.getElementById('regionSelect');
   const channelSelect = document.getElementById('channelSelect');
   const sortSelect = document.getElementById('sortSelect');
   const navModeSelect = document.getElementById('navModeSelect');
@@ -25,6 +23,137 @@
   const dataSourceBadge = document.getElementById('dataSourceBadge');
   const totalVideoCount = document.getElementById('totalVideoCount');
   const resetBtn = document.getElementById('resetBtn');
+
+
+  // ---- 언어(한글/English) ----
+  const I18N = {
+    ko: {
+      theme: '테마 변경',
+      note_html: '🧠 <b>임시 데이터</b>: 탭/브라우저를 닫으면 삭제됨 &nbsp;·&nbsp; 📦 <b>저장된 데이터</b>: 이 기기 브라우저에 저장됨 (삭제 전까지 이 PC의 다른 사용자도 볼 수 있음)',
+      data_label: '데이터:',
+      intro: '불러오기 버튼을 누르면 Google 로그인 창이 나타나며, 내 유튜브 서고에 접근합니다.',
+      load: '불러오기',
+      del_db: '현재 계정 DB 삭제',
+      tab_all: '전체보기', tab_liked: '좋아요', tab_disliked: '👎 싫어요', tab_playlists: '재생목록', tab_subs: '구독', tab_comments: '💬 내 댓글 ↗',
+      ph_search: '검색...', ph_channel_q: '채널 내 동영상 검색어...',
+      nav_scroll: '스크롤', nav_pages: '페이지',
+      export: '💾 데이터 저장',
+      reset: '로그아웃 및 전환',
+      footer: '이 앱은 youtube.readonly(읽기 전용) 권한만 요청합니다.',
+      zero_results: '0건 결과',
+      tmp_badge: '🧠 임시 데이터', saved_badge: '📦 저장된 데이터',
+      tmp_title_new: '방금 YouTube에서 불러온 임시 데이터입니다. 새로고침해도 유지되지만, 탭/브라우저를 닫으면 삭제됩니다.',
+      tmp_title: '이번 탭에서 불러온 임시 데이터입니다. 탭/브라우저를 닫으면 삭제됩니다.',
+      tmp_title_short: '탭/브라우저를 닫으면 삭제됩니다',
+      saved_title: '이 기기의 브라우저에 저장된 데이터입니다. 삭제하기 전까지 남아 있고, 이 PC의 다른 사용자도 볼 수 있습니다. 로그인 없이도 볼 수 있습니다.',
+      saved_title_short: '이 기기의 브라우저에 저장됨 (삭제 전까지 이 PC의 다른 사용자도 볼 수 있음)',
+      counts: ' · 영상 {v}개 · 구독 {s}개',
+      save_current: '현재 데이터 저장', delete: '삭제',
+      confirm_delete: '정말 계정({name})의 모든 데이터를 삭제할까요?',
+      deleted: '데이터와 계정 정보가 삭제되었습니다.',
+      delete_err: '삭제 중 오류가 발생했어요.',
+      quota: '⚠️ 불러온 데이터가 너무 많아서 임시 데이터로 보관할 수 없어요. 지금 화면은 그대로 보이지만, 새로고침하면 다시 불러와야 해요. 필요하면 "현재 데이터 저장" 버튼으로 이 기기에 저장하세요.',
+      cnt_eok: '억', cnt_man: '만', cnt_cheon: '천',
+      lbl_created: '생성: ', lbl_added: '추가: ', lbl_views: '조회: ', lbl_likes: '좋아요: ',
+      bd_none: '정보 없음', bd_liked: '좋아요', bd_disliked: '👎 싫어요', bd_playlist: '재생목록', bd_sub: '구독', bd_unknown: '생성일 미상',
+      src_liked: '출처: 좋아요 · ', src_pl: '출처: {title} · ',
+      n_videos: '{n}개 영상',
+      save_busy: '데이터를 불러오는 중에는 저장할 수 없어요. 불러오기가 끝난 뒤에 다시 눌러주세요.',
+      save_noacct: '계정이 식별되어야 저장할 수 있어요. 먼저 "불러오기"로 로그인해 주세요.',
+      save_confirm: '⚠️ 이 데이터를 이 기기의 브라우저에 저장하면, 삭제하기 전까지 이 PC를 쓰는 다른 사용자도 볼 수 있습니다.\n개인 PC에만 저장하거나, 사용 후 삭제 버튼으로 삭제하세요.\n\n계속 저장하시겠습니까?',
+      save_race: '그 사이에 데이터를 불러오기 시작했어요. 완료된 뒤에 다시 시도해 주세요.',
+      err_channel: '채널 정보를 확인하지 못했어요. "현재 데이터 저장"이 제한될 수 있어요.',
+      err_account: '계정 정보를 불러오는 중 오류가 발생했어요. "현재 데이터 저장"이 제한될 수 있어요.',
+      err_popup: '로그인 창이 닫혔거나 권한이 거부됐어요. 다시 시도해 주세요.',
+      err_origin: '현재 주소가 OAuth 클라이언트의 "승인된 자바스크립트 원본"에 등록돼 있지 않아요.',
+      err_login: '로그인 중 오류가 발생했어요: {type}.', err_unknown: '알 수 없는 오류',
+      err_file: 'file:// 경로에서는 로그인이 동작하지 않아요. 터미널에서 python3 -m http.server 8000 을 실행한 뒤 http://localhost:8000 으로 접속해 주세요.',
+      loading: '불러오는 중...', loading_n: '불러오는 중... {n}건',
+      err_expired: '로그인 토큰이 없거나 만료됐어요. 이 작업은 다시 로그인해야 해요. (다시 불러오면 지금 데이터는 새로 교체돼요)',
+      err_403: '접근이 거부됐어요 (403). API 활성화 여부와 테스트 사용자 등록 여부를 확인해 주세요.', detail: ' 상세: ',
+      err_load: '데이터를 불러오는 중 오류가 발생했어요 ({msg}).',
+      ph_all: '전체 영상 검색...', ph_title: '제목으로 검색...', ph_playlist: '재생목록 이름으로 검색...', ph_channel: '채널 이름 검색...',
+      st_videos: '영상 수', st_channels: '채널 수',
+      sort_original: '기본 순서', sort_title: '이름순', sort_dateDesc: '날짜 최신순', sort_dateAsc: '날짜 오래된순', sort_durDesc: '영상 긴순', sort_durAsc: '영상 짧은순',
+      back_pl: '◀ 재생목록으로',
+      all_channels: '전체 채널',
+      results: '{n}건 결과', results_of: '{n}/{total}건 결과',
+      empty: '검색 조건에 맞는 항목이 없어요.',
+      ch_search: '🔍 채널내 동영상 검색'
+    },
+    en: {
+      theme: 'Theme',
+      note_html: '🧠 <b>Temporary data</b>: deleted when you close the tab/browser &nbsp;·&nbsp; 📦 <b>Saved data</b>: stored in this device\'s browser (other users of this PC can see it until you delete it)',
+      data_label: 'Data:',
+      intro: 'Click Load to open the Google sign-in window and read your YouTube library (read-only).',
+      load: 'Load',
+      del_db: 'Delete current account DB',
+      tab_all: 'All', tab_liked: 'Liked', tab_disliked: '👎 Disliked', tab_playlists: 'Playlists', tab_subs: 'Subscriptions', tab_comments: '💬 My comments ↗',
+      ph_search: 'Search...', ph_channel_q: 'Search videos in channel...',
+      nav_scroll: 'Scroll', nav_pages: 'Pages',
+      export: '💾 Export data',
+      reset: 'Log out & switch',
+      footer: 'This app requests only the youtube.readonly (read-only) permission.',
+      zero_results: '0 results',
+      tmp_badge: '🧠 Temporary data', saved_badge: '📦 Saved data',
+      tmp_title_new: 'Temporary data just loaded from YouTube. It survives a refresh, but is deleted when you close the tab/browser.',
+      tmp_title: 'Temporary data loaded in this tab. It is deleted when you close the tab/browser.',
+      tmp_title_short: 'Deleted when you close the tab/browser',
+      saved_title: 'Data saved in this device\'s browser. It stays until you delete it, and other users of this PC can see it. You can view it without signing in.',
+      saved_title_short: 'Saved in this device\'s browser (other users of this PC can see it until you delete it)',
+      counts: ' · {v} videos · {s} subscriptions',
+      save_current: 'Save current data', delete: 'Delete',
+      confirm_delete: 'Delete all data for account ({name})?',
+      deleted: 'Data and account info have been deleted.',
+      delete_err: 'An error occurred while deleting.',
+      quota: '⚠️ There is too much data to keep as temporary data. What you see now stays on screen, but you will need to load it again after a refresh. If needed, use "Save current data" to save it on this device.',
+      cnt_eok: 'B', cnt_man: 'K', cnt_cheon: 'K',
+      lbl_created: 'Created: ', lbl_added: 'Added: ', lbl_views: 'Views: ', lbl_likes: 'Likes: ',
+      bd_none: 'No info', bd_liked: 'Liked', bd_disliked: '👎 Disliked', bd_playlist: 'Playlist', bd_sub: 'Subscription', bd_unknown: 'Creation date unknown',
+      src_liked: 'Source: Liked · ', src_pl: 'Source: {title} · ',
+      n_videos: '{n} videos',
+      save_busy: 'You cannot save while data is loading. Please try again when loading has finished.',
+      save_noacct: 'The account must be identified before saving. Please sign in with "Load" first.',
+      save_confirm: '⚠️ If you save this data in this device\'s browser, other users of this PC can see it until you delete it.\nSave only on a personal PC, or delete it with the delete button after use.\n\nContinue saving?',
+      save_race: 'Data loading started in the meantime. Please try again after it finishes.',
+      err_channel: 'Could not read channel info. "Save current data" may be limited.',
+      err_account: 'An error occurred while loading account info. "Save current data" may be limited.',
+      err_popup: 'The sign-in window was closed or permission was denied. Please try again.',
+      err_origin: 'The current address is not registered under "Authorized JavaScript origins" of the OAuth client.',
+      err_login: 'An error occurred during sign-in: {type}.', err_unknown: 'unknown error',
+      err_file: 'Sign-in does not work from file://. Run python3 -m http.server 8000 in a terminal, then open http://localhost:8000.',
+      loading: 'Loading...', loading_n: 'Loading... {n} items',
+      err_expired: 'The sign-in token is missing or expired. This action needs you to sign in again. (Loading again replaces the current data.)',
+      err_403: 'Access denied (403). Check that the API is enabled and that your account is registered as a test user.', detail: ' Details: ',
+      err_load: 'An error occurred while loading data ({msg}).',
+      ph_all: 'Search all videos...', ph_title: 'Search by title...', ph_playlist: 'Search by playlist name...', ph_channel: 'Search channel name...',
+      st_videos: 'Videos', st_channels: 'Channels',
+      sort_original: 'Default order', sort_title: 'By name', sort_dateDesc: 'Newest first', sort_dateAsc: 'Oldest first', sort_durDesc: 'Longest first', sort_durAsc: 'Shortest first',
+      back_pl: '◀ Back to playlists',
+      all_channels: 'All channels',
+      results: '{n} results', results_of: '{n}/{total} results',
+      empty: 'No items match your search.',
+      ch_search: '🔍 Search videos in channel'
+    }
+  };
+  let lang = 'ko';
+  try { lang = localStorage.getItem('yt_lang') || ((navigator.language || '').toLowerCase().startsWith('ko') ? 'ko' : 'en'); } catch(e) { lang = 'ko'; }
+  function t(key, vars){
+    let str = (I18N[lang] && I18N[lang][key]) || I18N.ko[key] || key;
+    if (vars) Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
+    return str;
+  }
+  const dateLocale = () => lang === 'ko' ? 'ko-KR' : 'en-US';
+  // 정적 HTML의 data-i18n(텍스트) / data-i18n-html / data-i18n-ph(placeholder) 요소를 현재 언어로 채운다
+  function applyStaticI18n(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+    const lt = document.getElementById('langToggle');
+    if (lt) lt.innerHTML = lang === 'ko' ? '<b>한글</b> / English' : '한글 / <b>English</b>';
+  }
+  applyStaticI18n();
 
   const DB_NAME = 'MyTubeDB';
   const DB_VERSION = 1;
@@ -124,13 +253,15 @@
         listEl.innerHTML = rows.map(row => `
             <div style="margin-bottom:8px; display:flex; align-items:center; border-bottom: 1px solid var(--hover); padding-bottom: 5px;">
                 <input type="checkbox" value="${row.id}" id="acct_${row.id}" ${selectedAccountIds.has(row.id) ? 'checked' : ''} style="margin-right:8px;">
-                <label for="acct_${row.id}" style="flex-grow:1; cursor:pointer;">
-                    ${row.isTemp ? '🧠 ' : ''}${escapeHtml(row.name)} <span style="color:var(--text-dim); font-size:11px;">(${escapeHtml(shortId(row.channelId))})</span>${row.isTemp ? ' - 임시 데이터' : ' - ' + (row.timestamp || '저장안됨')}
-                    <span ${row.isTemp ? 'id="tempCountsSpan"' : ''} style="color:var(--text-dim); font-size:11px;"> · 영상 ${row.videoCount.toLocaleString()}개 · 구독 ${row.subCount.toLocaleString()}개</span>
+                <label class="acct-label" style="flex-grow:1; cursor:pointer;">
+                    ${escapeHtml(row.name)} <span style="color:var(--text-dim); font-size:11px;">(${escapeHtml(shortId(row.channelId))})</span> ${row.isTemp
+                        ? '<span class="source-badge source-network" title="' + escapeHtml(t('tmp_title_short')) + '">' + t('tmp_badge') + '</span>'
+                        : '<span class="source-badge source-saved" title="' + escapeHtml(t('saved_title_short')) + '">' + t('saved_badge') + '</span> <span style="color:var(--text-dim); font-size:11px;">' + escapeHtml(row.timestamp || '') + '</span>'}
+                    <span ${row.isTemp ? 'id="tempCountsSpan"' : ''} style="color:var(--text-dim); font-size:11px;">${escapeHtml(t('counts', {v: row.videoCount.toLocaleString(), s: row.subCount.toLocaleString()}))}</span>
                 </label>
                 ${row.isTemp
-                    ? `<button class="primary save-current-btn" style="margin-left:8px; white-space:nowrap; font-size:12px; padding:4px 10px;">현재 데이터 저장</button>`
-                    : `<button class="delete-account-btn" style="background:#cc0000; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:8px;">삭제</button>`}
+                    ? `<button class="primary save-current-btn" style="margin-left:8px; white-space:nowrap; font-size:12px; padding:4px 10px;">${t('save_current')}</button>`
+                    : `<button class="delete-account-btn" style="background:#cc0000; color:white; border:none; padding:2px 8px; border-radius:4px; font-size:11px; cursor:pointer; margin-left:8px;">${t('delete')}</button>`}
             </div>
         `).join('');
         savedSection.style.display = 'block';
@@ -142,6 +273,13 @@
             cb.addEventListener('change', (e) => {
                 if (e.target.checked) selectedAccountIds.add(row.id);
                 else selectedAccountIds.delete(row.id);
+                onSelectionChange();
+            });
+            // 이름(라벨)을 누르면 그 항목만 단독 선택. 여러 개 선택은 체크박스를 직접 눌렀을 때만.
+            const labelEl = rowEl && rowEl.querySelector('.acct-label');
+            if (labelEl) labelEl.addEventListener('click', async () => {
+                selectedAccountIds = new Set([row.id]);
+                await updateAccountList(await getAccountList());
                 onSelectionChange();
             });
             if (row.isTemp) {
@@ -170,14 +308,17 @@
     const onlyTemp = selectedAccountIds.size === 1 && selectedAccountIds.has('__temp__');
     viewingSelection = !onlyTemp; // 임시 데이터만 단독 선택했을 때만 탭 클릭 시 새로 불러올 수 있게 둔다
     lastDataSource = onlyTemp ? (cache.all && cache.all.length ? 'session' : 'network') : 'saved';
-    mode = 'all';
+    // 보고 있던 탭은 유지한다. 재생목록 상세는 합쳐진 데이터에 없을 수 있으니 재생목록 탭으로 돌린다.
+    if (mode === 'playlistItems') { currentPlaylist = null; mode = 'playlists'; }
+    if (!mode) mode = 'all';
+    setActiveTab(mode);
     tabbar.style.display = 'flex';
     onDataReady();
   }
 
   // 체크박스로 선택된 계정(들)의 데이터를 읽어서 하나로 합친다. 각 항목에는 어느 계정 데이터인지 표시를 붙인다.
   async function loadMergedData(selectedIds){
-    const merged = { liked: [], disliked: [], playlists: [], subscriptions: [], trending: {}, search: [], all: [] };
+    const merged = { liked: [], disliked: [], playlists: [], subscriptions: [], all: [] };
     const mergedPlaylistItems = {};
     const accountList = await getAccountList();
 
@@ -196,15 +337,10 @@
         accName = (match && typeof match === 'object') ? match.name : id;
       }
 
-      ['liked', 'disliked', 'playlists', 'subscriptions', 'search'].forEach(key => {
+      ['liked', 'disliked', 'playlists', 'subscriptions'].forEach(key => {
         (accCache[key] || []).forEach(item => merged[key].push({ ...item, accountName: accName }));
       });
       (accCache.all || []).forEach(item => merged.all.push({ ...item, accountName: accName }));
-
-      Object.entries(accCache.trending || {}).forEach(([region, regionItems]) => {
-        if (!merged.trending[region]) merged.trending[region] = [];
-        (regionItems || []).forEach(item => merged.trending[region].push({ ...item, accountName: accName }));
-      });
 
       Object.entries(accPlaylistItems || {}).forEach(([plId, plItems]) => {
         if (!mergedPlaylistItems[plId]) mergedPlaylistItems[plId] = [];
@@ -218,7 +354,7 @@
 
   // 현재 화면에 떠 있는 데이터/화면을 모두 비우고 "선택 전" 상태로 되돌린다
   function resetToEmptyState(){
-    cache = { liked: null, disliked: null, playlists: null, subscriptions: null, trending: {}, search: null, all: null };
+    cache = { liked: null, disliked: null, playlists: null, subscriptions: null, all: null };
     playlistItemsCache = {};
     filtered = [];
     lastDataSource = null;
@@ -236,7 +372,7 @@
   }
 
   window.deleteAccount = async function(accountId, accountName) {
-    if (!confirm(`정말 계정(${accountName})의 모든 데이터를 삭제할까요?`)) return;
+    if (!confirm(t('confirm_delete', {name: accountName}))) return;
     const db = await getDB();
     const tx = db.transaction(STORE_NAME, 'readwrite');
     const store = tx.objectStore(STORE_NAME);
@@ -264,7 +400,7 @@
     };
 
     tx.oncomplete = async () => {
-        alert('데이터와 계정 정보가 삭제되었습니다.');
+        alert(t('deleted'));
         // 지금 선택(체크)되어 보고 있던 계정이었을 때만 화면에서도 제거한다 (다른 걸 보고 있었다면 그대로 유지)
         const wasSelected = selectedAccountIds.has(accountId);
         selectedAccountIds.delete(accountId);
@@ -273,7 +409,7 @@
             await onSelectionChange();
         }
     };
-    tx.onerror = () => { showError('삭제 중 오류가 발생했어요.'); };
+    tx.onerror = () => { showError(t('delete_err')); };
   };
 
   function getAccountId() {
@@ -325,14 +461,15 @@
   let tokenClient = null;
   let accessToken = sessionStorage.getItem('yt_access_token') || null;
   let tokenExpiresAt = parseInt(sessionStorage.getItem('yt_token_expires_at'), 10) || null;
-  let tokenCountdownTimer = null;
-  let cache = { liked: null, disliked: null, playlists: null, subscriptions: null, trending: {}, search: null, all: null };
+  let cache = { liked: null, disliked: null, playlists: null, subscriptions: null, all: null };
   let playlistItemsCache = {};
+  let mode = 'all'; // 현재 보고 있는 탭
   let currentPlaylist = null;
   let filtered = [];
   let lastDataSource = null; // 'network' = API에서 새로 받아옴(세션저장), 'session' = 이번 세션 캐시(sessionStorage), 'saved' = 저장된 IndexedDB 데이터
   let selectedAccountIds = new Set(); // 체크박스로 선택된 데이터 소스들 ('__temp__' 또는 저장된 계정 id), 여러 개 동시 선택 가능
   let viewingSelection = false; // true면 선택된 데이터를 합쳐서 보여주는 중(탭 전환 시 새로 불러오지 않음)
+  let isLoading = false; // API에서 불러오는 중일 때 true. 이 중에 저장하면 cache가 양쪽에서 동시에 바뀌어 꼬인다
   let sessionCacheQuotaWarned = false;
   let page = 1;
   let visibleCount = 20;
@@ -366,7 +503,7 @@
     } catch(e) {
       if (!sessionCacheQuotaWarned) {
         sessionCacheQuotaWarned = true;
-        showError('⚠️ 불러온 데이터가 너무 많아서 세션에 임시 저장할 수 없어요. 지금 화면은 그대로 보이지만, 새로고침하면 다시 불러와야 해요. 필요하면 "현재 데이터 저장" 버튼으로 브라우저에 영구 저장하세요.');
+        showError(t('quota'));
       }
     }
   }
@@ -377,7 +514,7 @@
     if (!span) return;
     const videoCount = (cache.all && cache.all.length) || (cache.liked && cache.liked.length) || 0;
     const subCount = (cache.subscriptions && cache.subscriptions.length) || 0;
-    span.textContent = ' · 영상 ' + videoCount.toLocaleString() + '개 · 구독 ' + subCount.toLocaleString() + '개';
+    span.textContent = t('counts', {v: videoCount.toLocaleString(), s: subCount.toLocaleString()});
   }
 
   function restoreSessionCache(){
@@ -395,36 +532,16 @@
     sessionCacheQuotaWarned = false;
   }
 
-  function startTokenCountdown(){
-    if (tokenCountdownTimer) clearInterval(tokenCountdownTimer);
-    updateTokenCountdownLabel();
-    tokenCountdownTimer = setInterval(updateTokenCountdownLabel, 1000);
-  }
-
-  function stopTokenCountdown(){
-    if (tokenCountdownTimer) { clearInterval(tokenCountdownTimer); tokenCountdownTimer = null; }
-    logoutBtn.textContent = '로그아웃';
-  }
-
-  function updateTokenCountdownLabel(){
-    if (!accessToken || !tokenExpiresAt) { stopTokenCountdown(); return; }
-    const remainMs = tokenExpiresAt - Date.now();
-    if (remainMs <= 0) { onTokenExpired(); return; }
-    const totalSec = Math.floor(remainMs / 1000);
-    const mm = Math.floor(totalSec / 60);
-    const ss = totalSec % 60;
-    logoutBtn.textContent = `로그아웃 (${mm}:${String(ss).padStart(2,'0')} 후 토큰 만료)`;
-  }
-
-  function onTokenExpired(){
-    stopTokenCountdown();
+  // 전체 불러오기가 끝나면 토큰은 더 필요 없으므로 즉시 폐기한다. 불러온 데이터(세션 캐시)와 계정 식별은 그대로 유지한다.
+  function releaseToken(){
+    if(accessToken && window.google && google.accounts && google.accounts.oauth2){
+      google.accounts.oauth2.revoke(accessToken, ()=>{});
+    }
     accessToken = null;
     tokenExpiresAt = null;
     sessionStorage.removeItem('yt_access_token');
     sessionStorage.removeItem('yt_token_expires_at');
     loginBtn.style.display = 'inline-block';
-    logoutBtn.style.display = 'none';
-    showError('로그인 토큰이 만료됐어요. 다시 로그인해 주세요. (지금까지 불러온 데이터는 그대로 볼 수 있어요)');
   }
 
   function parseDuration(iso) {
@@ -453,28 +570,47 @@
     if (!num) return null;
     const n = parseInt(num, 10);
     if (isNaN(n)) return null;
-    if (n >= 100000000) return (n / 100000000).toFixed(1) + '억';
-    if (n >= 10000) return (n / 10000).toFixed(1) + '만';
-    if (n >= 1000) return (n / 1000).toFixed(1) + '천';
+    if (lang === 'ko') {
+      if (n >= 100000000) return (n / 100000000).toFixed(1) + t('cnt_eok');
+      if (n >= 10000) return (n / 10000).toFixed(1) + t('cnt_man');
+      if (n >= 1000) return (n / 1000).toFixed(1) + t('cnt_cheon');
+    } else {
+      if (n >= 1000000000) return (n / 1000000000).toFixed(1) + 'B';
+      if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    }
     return n.toLocaleString();
   }
 
-  function fmtDates(createdIso, addedIso, viewCount, likeCount, defaultBadge = '정보 없음'){
+  function fmtDates(createdIso, addedIso, viewCount, likeCount, defaultBadge){
+    if (defaultBadge === undefined) defaultBadge = t('bd_none');
     const lines = [];
+    const dopt = {year:'2-digit', month:'2-digit', day:'2-digit'};
     if(createdIso){
       const d = new Date(createdIso);
-      if(!isNaN(d)) lines.push('생성: ' + d.toLocaleDateString('ko-KR', {year:'2-digit', month:'2-digit', day:'2-digit'}));
+      if(!isNaN(d)) lines.push(t('lbl_created') + d.toLocaleDateString(dateLocale(), dopt));
     }
     if(addedIso){
       const d = new Date(addedIso);
-      if(!isNaN(d)) lines.push('추가: ' + d.toLocaleDateString('ko-KR', {year:'2-digit', month:'2-digit', day:'2-digit'}));
+      if(!isNaN(d)) lines.push(t('lbl_added') + d.toLocaleDateString(dateLocale(), dopt));
     }
     const views = fmtCount(viewCount);
-    if (views) lines.push('조회: ' + views);
+    if (views) lines.push(t('lbl_views') + views);
     const likes = fmtCount(likeCount);
-    if (likes) lines.push('좋아요: ' + likes);
+    if (likes) lines.push(t('lbl_likes') + likes);
 
     return lines.length > 0 ? lines.join(' · ') : defaultBadge;
+  }
+
+  // 배지 문구가 불러온 시점의 언어로 굳지 않도록 원본 값(bm)을 같이 저장하고, 화면에 그릴 때마다 현재 언어로 만든다.
+  // (bm이 없는 예전 저장 데이터는 저장된 badge 문자열을 그대로 쓴다)
+  function buildBadge(m){
+    const pre = !m.pre ? '' : (m.pre.k ? t(m.pre.k) : t('src_pl', {title: m.pre.pl}));
+    return pre + fmtDates(m.c, m.a, m.v, m.l, m.d ? t(m.d) : '');
+  }
+  function bmeta(c, a, v, l, defKey, pre){
+    const bm = { c, a, v, l, d: defKey, pre: pre || null };
+    return { badge: buildBadge(bm), bm };
   }
 
   function pushNavState(targetMode, targetPl = null, targetCh = null){
@@ -482,7 +618,7 @@
   }
 
   window.addEventListener('popstate', (e)=>{
-    if(!accessToken) return;
+    if(!accessToken && !liveAccountId) return;
     if(e.state){
       mode = e.state.mode;
       currentPlaylist = e.state.playlist;
@@ -519,22 +655,31 @@
     observer.observe(sentinel);
 
     // 같은 탭에서 새로고침한 경우: sessionStorage에 남아있는 로그인 세션을 복원
-    if (accessToken && tokenExpiresAt && tokenExpiresAt > Date.now() && liveAccountId) {
+    // (불러오기 직후 토큰을 폐기하므로, 토큰이 없어도 세션 캐시가 남아 있으면 복원한다)
+    const tokenValid = !!(accessToken && tokenExpiresAt && tokenExpiresAt > Date.now());
+    if (liveAccountId && (tokenValid || sessionStorage.getItem('yt_session_cache'))) {
       currentAccountId = liveAccountId;
       currentAccountName = liveAccountName;
       restoreSessionCache();
-      selectedAccountIds = new Set(['__temp__']);
+      // 이미 저장한 계정이면 목록에서 "임시 데이터" 줄이 숨겨지므로, 화면의 데이터와 맞게 저장된 계정 줄을 체크한다
+      selectedAccountIds = new Set([liveAccountSaved ? liveAccountId : '__temp__']);
       viewingSelection = false;
-      loginBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
+      if (tokenValid) {
+        loginBtn.style.display = 'none';
+      } else {
+        accessToken = null;
+        tokenExpiresAt = null;
+        sessionStorage.removeItem('yt_access_token');
+        sessionStorage.removeItem('yt_token_expires_at');
+        loginBtn.style.display = 'inline-block';
+      }
       tabbar.style.display = 'flex';
-      startTokenCountdown();
       await updateAccountList(await getAccountList());
       if (cache.all) {
         mode = 'all';
         lastDataSource = 'session';
         onDataReady();
-      } else {
+      } else if (tokenValid) {
         loadTab('all', false);
       }
       history.replaceState({ mode: 'all', playlist: null, channel: null }, '');
@@ -551,21 +696,29 @@
         sessionStorage.removeItem('yt_live_account_name');
       }
       loginBtn.style.display = 'inline-block';
-      logoutBtn.style.display = 'none';
     }
   });
 
   // "현재 데이터 저장"은 화면에 지금 합쳐서 보여주는 데이터가 아니라, 항상 이번 탭의 "임시 데이터"(sessionStorage) 자체를 저장한다.
   // 그래야 여러 계정을 체크해서 합쳐 보는 중에 눌러도 다른 계정 데이터가 섞여서 저장되지 않는다.
   window.saveCurrentData = async function(){
-      if (!liveAccountId) {
-          alert('계정이 식별되어야 저장할 수 있어요. 먼저 "불러오기"로 로그인해 주세요.');
+      if (isLoading) {
+          alert(t('save_busy'));
           return;
       }
-      const ok = confirm('⚠️ 이 데이터를 브라우저(IndexedDB)에 저장하면, 삭제하기 전까지 같은 PC/브라우저를 쓰는 다른 사람도 볼 수 있습니다.\n개인 PC에서만 저장하세요.\n\n계속 저장하시겠습니까?');
+      if (!liveAccountId) {
+          alert(t('save_noacct'));
+          return;
+      }
+      const ok = confirm(t('save_confirm'));
       if (!ok) return;
+      if (isLoading) {
+          // confirm() 창이 떠 있는 동안 다른 데이터 불러오기가 시작됐을 수도 있으니 한 번 더 확인
+          alert(t('save_race'));
+          return;
+      }
 
-      const emptyCache = { liked: null, disliked: null, playlists: null, subscriptions: null, trending: {}, search: null, all: null };
+      const emptyCache = { liked: null, disliked: null, playlists: null, subscriptions: null, all: null };
       let tempCache, tempPlaylistItems;
       try { tempCache = JSON.parse(sessionStorage.getItem('yt_session_cache') || 'null') || emptyCache; } catch(e) { tempCache = emptyCache; }
       try { tempPlaylistItems = JSON.parse(sessionStorage.getItem('yt_session_playlistItemsCache') || 'null') || {}; } catch(e) { tempPlaylistItems = {}; }
@@ -585,7 +738,6 @@
       store.put(tempCache, liveAccountId + '_yt_cache');
       store.put(tempPlaylistItems, liveAccountId + '_yt_playlistItemsCache');
       tx.oncomplete = async () => {
-          alert('저장되었습니다. (' + timestamp + ')');
           liveAccountSaved = true;
           sessionStorage.setItem('yt_live_account_saved', '1');
           // 내부 선택 상태도 "임시 데이터"에서 "저장된 데이터"로 바꿔준다. 그대로 두면 둘 다 선택된 것으로 남아
@@ -606,17 +758,16 @@
     const clientId = clientIdInput.value.trim();
     return google.accounts.oauth2.initTokenClient({
       client_id: clientId,
-      scope: 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/userinfo.email',
+      scope: 'https://www.googleapis.com/auth/youtube.readonly',
       callback: (resp)=>{
         if(resp.error){ handleAuthError(resp); return; }
         accessToken = resp.access_token;
         sessionStorage.setItem('yt_access_token', accessToken);
         tokenExpiresAt = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
         sessionStorage.setItem('yt_token_expires_at', String(tokenExpiresAt));
-        startTokenCountdown();
 
         // 새 로그인은 항상 깨끗한 세션으로 시작 (이전 세션 데이터를 들고 오지 않음)
-        cache = { liked: null, disliked: null, playlists: null, subscriptions: null, trending: {}, search: null, all: null };
+        cache = { liked: null, disliked: null, playlists: null, subscriptions: null, all: null };
         playlistItemsCache = {};
         clearSessionCache();
         selectedAccountIds = new Set(['__temp__']);
@@ -625,26 +776,12 @@
         sessionStorage.removeItem('yt_live_account_saved');
 
         loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
         clearError();
         tabbar.style.display = 'flex';
 
         // 계정 식별이 끝난 뒤에 데이터를 불러온다 (순서를 보장해야 "저장"에 쓸 계정ID가 확실히 세팅됨)
         (async () => {
           try {
-            const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-                headers: { Authorization: 'Bearer ' + accessToken }
-            });
-            const userInfo = await userInfoRes.json();
-            console.log('--- [STAGE 1: Account Selection] ---');
-            console.log('Detected Account:', userInfo.email);
-
-            // Check if it's a primary account
-            if (userInfo.email && !userInfo.email.endsWith('@pages.plusgoogle.com')) {
-                sessionStorage.setItem('yt_primary_email', userInfo.email);
-                console.log('Primary email saved:', userInfo.email);
-            }
-
             const channelsRes = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true', {
                 headers: { Authorization: 'Bearer ' + accessToken }
             });
@@ -666,10 +803,10 @@
                 // "저장" 버튼을 눌러야만 계정이 실제로 IndexedDB 목록에 등록된다 (불러오기만으로는 등록 안 함)
                 await updateAccountList(await getAccountList());
             } else {
-                showError('채널 정보를 확인하지 못했어요. "현재 데이터 저장"이 제한될 수 있어요.');
+                showError(t('err_channel'));
             }
           } catch (e) {
-            showError('계정 정보를 불러오는 중 오류가 발생했어요. "현재 데이터 저장"이 제한될 수 있어요.');
+            showError(t('err_account'));
           }
 
           loadTab('all', false);
@@ -683,32 +820,30 @@
   function handleAuthError(err){
     const type = (err && (err.type || err.error)) || '';
     if(/popup_closed|access_denied/i.test(type)){
-      showError('로그인 창이 닫혔거나 권한이 거부됐어요. 다시 시도해 주세요.');
+      showError(t('err_popup'));
     }else if(/redirect_uri_mismatch|origin/i.test(type)){
-      showError('현재 주소가 OAuth 클라이언트의 "승인된 자바스크립트 원본"에 등록돼 있지 않아요.');
+      showError(t('err_origin'));
     }else{
-      showError('로그인 중 오류가 발생했어요: ' + (type || '알 수 없는 오류') + '.');
+      showError(t('err_login', {type: type || t('err_unknown')}));
     }
   }
 
   loginBtn.addEventListener('click', ()=>{
     clearError();
     if(location.protocol === 'file:'){
-      showError('file:// 경로에서는 로그인이 동작하지 않아요. 터미널에서 python3 -m http.server 8000 을 실행한 뒤 http://localhost:8000 으로 접속해 주세요.');
+      showError(t('err_file'));
       return;
     }
     tokenClient = initTokenClient();
     if(tokenClient) tokenClient.requestAccessToken({prompt: 'consent'});
   });
 
-  logoutBtn.addEventListener('click', doReset);
   resetBtn.addEventListener('click', doReset);
 
   async function doReset(){
     if(accessToken && window.google && google.accounts && google.accounts.oauth2){
       google.accounts.oauth2.revoke(accessToken, ()=>{});
     }
-    stopTokenCountdown();
     accessToken = null;
     tokenExpiresAt = null;
     sessionStorage.removeItem('yt_access_token');
@@ -723,7 +858,6 @@
 
     // UI updates to reflect logged-out state
     loginBtn.style.display = 'inline-block';
-    logoutBtn.style.display = 'none';
 
     // 임시 데이터 선택은 로그아웃과 함께 해제된다. 다른 저장된 데이터를 같이 선택해서 보고 있었다면 그건 그대로 둔다.
     selectedAccountIds.delete('__temp__');
@@ -779,12 +913,6 @@
       if(!cache.playlists){ await fetchPlaylists(); } else { lastDataSource = 'session'; onDataReady(); }
     }else if(tab === 'subscriptions'){
       if(!cache.subscriptions){ await fetchSubscriptions(); } else { lastDataSource = 'session'; onDataReady(); }
-    }else if(tab === 'trending'){
-      const region = regionSelect.value || 'KR';
-      if(!cache.trending[region]){ await fetchTrending(region); } else { lastDataSource = 'session'; onDataReady(); }
-    }else if(tab === 'search'){
-      lastDataSource = 'session';
-      onDataReady();
     }
   }
 
@@ -796,6 +924,7 @@
       const url = new URL(baseUrl);
       Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
       if(pageToken) url.searchParams.set('pageToken', pageToken);
+      if(!accessToken) throw new Error('AUTH_EXPIRED');
       const res = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
       if(res.status === 401) throw new Error('AUTH_EXPIRED');
       if(res.status === 403){
@@ -807,40 +936,41 @@
       onPage(data.items || []);
       total += (data.items || []).length;
       pageToken = data.nextPageToken || '';
-      setStatus('불러오는 중... ' + total.toLocaleString() + '건');
+      setStatus(t('loading_n', {n: total.toLocaleString()}));
       progressFill.style.width = Math.min(95, 10 + total/20) + '%';
       guard++;
     } while(pageToken && guard < maxPages);
   }
 
   function beginLoad(){
+    isLoading = true;
     lastDataSource = 'network';
     clearError();
     progressBar.style.display = 'block';
     progressFill.style.width = '5%';
-    setStatus('불러오는 중...');
+    setStatus(t('loading'));
   }
   function endLoad(){
+    isLoading = false;
     progressFill.style.width = '100%';
     setTimeout(()=>{ progressBar.style.display = 'none'; }, 300);
     setStatus('');
   }
   function handleLoadError(err){
+    isLoading = false;
     progressBar.style.display = 'none';
     setStatus('');
     if(err.message === 'AUTH_EXPIRED'){
-      showError('로그인이 만료됐어요. 다시 로그인해 주세요.');
-      stopTokenCountdown();
+      showError(t('err_expired'));
       accessToken = null;
       tokenExpiresAt = null;
       sessionStorage.removeItem('yt_access_token');
       sessionStorage.removeItem('yt_token_expires_at');
-      logoutBtn.style.display = 'none';
       loginBtn.style.display = 'inline-block';
     }else if(err.message.startsWith('FORBIDDEN')){
-      showError('접근이 거부됐어요 (403). API 활성화 여부와 테스트 사용자 등록 여부를 확인해 주세요.' + (err.message.split(':')[1] ? ' 상세: ' + err.message.split(':')[1] : ''));
+      showError(t('err_403') + (err.message.split(':')[1] ? t('detail') + err.message.split(':')[1] : ''));
     }else{
-      showError('데이터를 불러오는 중 오류가 발생했어요 (' + err.message + ').');
+      showError(t('err_load', {msg: err.message}));
     }
   }
 
@@ -864,7 +994,7 @@
             url: 'https://www.youtube.com/watch?v=' + item.id,
             videoId: item.id,
             duration, durationSec,
-            badge: fmtDates(pubDate, null, viewCount, likeCount, 'LIKED'), 
+            ...bmeta(pubDate, null, viewCount, likeCount, 'bd_liked'), 
             round:false, clickable:false, createdAt: pubDate
           });
         }); });
@@ -901,8 +1031,7 @@
           videoId: item.id,
           duration: det.duration || '',
           durationSec: det.durationSec || 0,
-          badge: '출처: 좋아요 · ' + fmtDates(item.snippet.publishedAt, null, det.viewCount, det.likeCount, ''),
-          source: '좋아요',
+          ...bmeta(item.snippet.publishedAt, null, det.viewCount, det.likeCount, '', {k: 'src_liked'}),
           createdAt: item.snippet.publishedAt
         };
       });
@@ -927,7 +1056,7 @@
           url: 'https://www.youtube.com/watch?v=' + item.id,
           videoId: item.id,
           duration, durationSec,
-          badge: fmtDates(pubDate, null, viewCount, likeCount, '👎 싫어요'),
+          ...bmeta(pubDate, null, viewCount, likeCount, 'bd_disliked'),
           round:false, clickable:false, createdAt: pubDate
         };
       });
@@ -941,9 +1070,9 @@
       cache.playlists = rawPlaylists.map(pl => ({
         id: pl.id,
         title: pl.snippet.title,
-        sub: (pl.contentDetails.itemCount || 0).toLocaleString() + '개 영상',
+        sub: t('n_videos', {n: (pl.contentDetails.itemCount || 0).toLocaleString()}), plCount: pl.contentDetails.itemCount || 0,
         thumb: (pl.snippet.thumbnails && (pl.snippet.thumbnails.medium || pl.snippet.thumbnails.default) || {}).url || '',
-        badge: fmtDates(pl.snippet.publishedAt, null, null, null, '재생목록'), round:false, clickable:true
+        ...bmeta(pl.snippet.publishedAt, null, null, null, 'bd_playlist'), round:false, clickable:true
       }));
 
       for(const pl of rawPlaylists){
@@ -972,8 +1101,7 @@
             videoId: vid,
             duration: det.duration || '',
             durationSec: det.durationSec || 0,
-            badge: '출처: ' + pl.snippet.title + ' · ' + fmtDates(item.snippet.videoOwnerPublishedAt || '', item.snippet.publishedAt || '', det.viewCount, det.likeCount, ''),
-            source: '재생목록: ' + pl.snippet.title,
+            ...bmeta(item.snippet.videoOwnerPublishedAt || '', item.snippet.publishedAt || '', det.viewCount, det.likeCount, '', {pl: pl.snippet.title}),
             createdAt: item.snippet.publishedAt
           };
         });
@@ -993,7 +1121,7 @@
             sub: sub.snippet.description ? sub.snippet.description.slice(0,120) : '',
             thumb: (sub.snippet.thumbnails && (sub.snippet.thumbnails.medium || sub.snippet.thumbnails.default) || {}).url || '',
             url: chId ? 'https://www.youtube.com/channel/' + chId : '',
-            badge: fmtDates(sub.snippet.publishedAt, null, null, null, '구독'), round:true, clickable:false, isDesc:true
+            ...bmeta(sub.snippet.publishedAt, null, null, null, 'bd_sub'), round:true, clickable:false, isDesc:true
           });
         }); });
       cache.subscriptions = subItems;
@@ -1002,6 +1130,7 @@
       saveSessionCache();
       endLoad();
       onDataReady();
+      releaseToken();
     }catch(err){ handleLoadError(err); }
   }
 
@@ -1025,7 +1154,7 @@
             url: 'https://www.youtube.com/watch?v=' + item.id,
             videoId: item.id,
             duration, durationSec,
-            badge: fmtDates(pubDate, null, viewCount, likeCount, '👎 싫어요'), 
+            ...bmeta(pubDate, null, viewCount, likeCount, 'bd_disliked'), 
             round:false, clickable:false, createdAt: pubDate
           });
         }); });
@@ -1046,9 +1175,9 @@
           items.push({
             id: pl.id,
             title: pl.snippet.title,
-            sub: (pl.contentDetails.itemCount || 0).toLocaleString() + '개 영상',
+            sub: t('n_videos', {n: (pl.contentDetails.itemCount || 0).toLocaleString()}), plCount: pl.contentDetails.itemCount || 0,
             thumb: (pl.snippet.thumbnails && (pl.snippet.thumbnails.medium || pl.snippet.thumbnails.default) || {}).url || '',
-            badge: fmtDates(pl.snippet.publishedAt, null, null, null, '재생목록'), round:false, clickable:true
+            ...bmeta(pl.snippet.publishedAt, null, null, null, 'bd_playlist'), round:false, clickable:true
           });
         }); });
       cache.playlists = items;
@@ -1060,6 +1189,7 @@
 
   async function fetchVideosDetails(videoIds) {
     if(!videoIds || videoIds.length === 0) return {};
+    if(!accessToken) throw new Error('AUTH_EXPIRED');
     const detailsMap = {};
     const chunks = [];
     for(let i=0; i<videoIds.length; i+=50) {
@@ -1112,7 +1242,7 @@
           videoId: vid,
           duration: det.duration || '',
           durationSec: det.durationSec || 0,
-          badge: fmtDates(videoOwnerPublishedAt, addedAt, det.viewCount, det.likeCount, '생성일 미상'), 
+          ...bmeta(videoOwnerPublishedAt, addedAt, det.viewCount, det.likeCount, 'bd_unknown'), 
           round:false, clickable:false, addedAt, createdAt: videoOwnerPublishedAt
         };
       });
@@ -1138,87 +1268,10 @@
             sub: sub.snippet.description ? sub.snippet.description.slice(0,120) : '',
             thumb: (sub.snippet.thumbnails && (sub.snippet.thumbnails.medium || sub.snippet.thumbnails.default) || {}).url || '',
             url: chId ? 'https://www.youtube.com/channel/' + chId : '',
-            badge: fmtDates(sub.snippet.publishedAt, null, null, null, '구독'), round:true, clickable:false, isDesc:true
+            ...bmeta(sub.snippet.publishedAt, null, null, null, 'bd_sub'), round:true, clickable:false, isDesc:true
           });
         }); });
       cache.subscriptions = items;
-      saveSessionCache();
-      endLoad();
-      onDataReady();
-    }catch(err){ handleLoadError(err); }
-  }
-
-  async function fetchTrending(regionCode = 'KR'){
-    beginLoad();
-    const items = [];
-    try{
-      await apiPaginate('https://www.googleapis.com/youtube/v3/videos',
-        { part:'snippet,contentDetails,statistics', chart:'mostPopular', regionCode, maxResults:'50' },
-        (batch)=>{ batch.forEach(item=>{
-          const pubDate = item.snippet.publishedAt || '';
-          const duration = parseDuration(item.contentDetails ? item.contentDetails.duration : '');
-          const durationSec = parseDurationToSec(item.contentDetails ? item.contentDetails.duration : '');
-          const viewCount = item.statistics ? item.statistics.viewCount : null;
-          const likeCount = item.statistics ? item.statistics.likeCount : null;
-
-          items.push({
-            title: item.snippet.title,
-            sub: item.snippet.channelTitle,
-            thumb: (item.snippet.thumbnails && (item.snippet.thumbnails.medium || item.snippet.thumbnails.default) || {}).url || '',
-            url: 'https://www.youtube.com/watch?v=' + item.id,
-            videoId: item.id,
-            duration, durationSec,
-            badge: fmtDates(pubDate, null, viewCount, likeCount, '🔥 인기'), 
-            round:false, clickable:false, createdAt: pubDate
-          });
-        }); }, 1);
-      cache.trending[regionCode] = items;
-      saveSessionCache();
-      endLoad();
-      onDataReady();
-    }catch(err){ handleLoadError(err); }
-  }
-
-  async function fetchGeneralSearch(query){
-    if(!query) return;
-    beginLoad();
-    const rawItems = [];
-    const videoIds = [];
-    try{
-      await apiPaginate('https://www.googleapis.com/youtube/v3/search',
-        { part:'snippet', q: query, maxResults:'50' },
-        (batch)=>{ batch.forEach(item=>{
-          if(item.id && item.id.videoId) videoIds.push(item.id.videoId);
-          rawItems.push(item);
-        }); }, 2);
-
-      const detailsMap = await fetchVideosDetails(videoIds);
-      const items = rawItems.map(item => {
-        const vid = item.id ? item.id.videoId : '';
-        const chId = item.id ? item.id.channelId : '';
-        const plId = item.id ? item.id.playlistId : '';
-        const pubDate = item.snippet.publishedAt || '';
-        const det = detailsMap[vid] || {};
-
-        let url = '';
-        let badge = '검색';
-        let round = false;
-        if(vid) { url = 'https://www.youtube.com/watch?v=' + vid; badge = fmtDates(pubDate, null, det.viewCount, det.likeCount, '동영상'); }
-        else if(chId) { url = 'https://www.youtube.com/channel/' + chId; badge = '채널'; round = true; }
-        else if(plId) { url = 'https://www.youtube.com/playlist?list=' + plId; badge = '재생목록'; }
-
-        return {
-          title: item.snippet.title,
-          sub: item.snippet.channelTitle || item.snippet.description || '',
-          thumb: (item.snippet.thumbnails && (item.snippet.thumbnails.medium || item.snippet.thumbnails.default) || {}).url || '',
-          url, videoId: vid,
-          duration: det.duration || '',
-          durationSec: det.durationSec || 0,
-          badge, round, clickable: false, createdAt: pubDate
-        };
-      });
-
-      cache.search = items;
       saveSessionCache();
       endLoad();
       onDataReady();
@@ -1231,8 +1284,6 @@
     if(mode === 'disliked') return cache.disliked || [];
     if(mode === 'playlists') return cache.playlists || [];
     if(mode === 'subscriptions') return cache.subscriptions || [];
-    if(mode === 'trending') return cache.trending[regionSelect.value || 'KR'] || [];
-    if(mode === 'search') return cache.search || [];
     if(mode === 'playlistItems' && currentPlaylist) return playlistItemsCache[currentPlaylist.id] || [];
     return [];
   }
@@ -1245,16 +1296,16 @@
 
     if (dataSourceBadge) {
       if (lastDataSource === 'network') {
-        dataSourceBadge.textContent = '🌐 API에서 새로 받아옴 (세션 저장)';
-        dataSourceBadge.title = '방금 YouTube API에서 새로 가져온 데이터입니다. sessionStorage에 임시 저장되어 새로고침해도 유지되지만, 탭/브라우저를 닫으면 사라집니다.';
+        dataSourceBadge.textContent = t('tmp_badge');
+        dataSourceBadge.title = t('tmp_title_new');
         dataSourceBadge.className = 'source-badge source-network';
       } else if (lastDataSource === 'session') {
-        dataSourceBadge.textContent = '🧠 세션 캐시 (sessionStorage)';
-        dataSourceBadge.title = '이번 탭에서 이미 불러온 데이터를 재사용 중입니다 (네트워크 호출 없음). 탭/브라우저를 닫으면 사라집니다.';
+        dataSourceBadge.textContent = t('tmp_badge');
+        dataSourceBadge.title = t('tmp_title');
         dataSourceBadge.className = 'source-badge source-cache';
       } else if (lastDataSource === 'saved') {
-        dataSourceBadge.textContent = '📦 저장된 데이터 (IndexedDB)';
-        dataSourceBadge.title = '이전에 "현재 데이터 저장" 버튼으로 브라우저에 영구 저장해 둔 데이터입니다. 로그인 없이도 볼 수 있습니다.';
+        dataSourceBadge.textContent = t('saved_badge');
+        dataSourceBadge.title = t('saved_title');
         dataSourceBadge.className = 'source-badge source-saved';
       } else {
         dataSourceBadge.textContent = '';
@@ -1264,63 +1315,50 @@
 
     stats.innerHTML = '';
     channelQueryInput.style.display = 'none';
-    regionSelect.style.display = 'none';
 
     if(mode === 'all'){
       stats.style.display = 'none';
-      searchInput.placeholder = '전체 영상 검색...';
+      searchInput.placeholder = t('ph_all');
     }else if(mode === 'liked' || mode === 'disliked'){
       stats.style.display = 'none';
-      searchInput.placeholder = '제목으로 검색...';
+      searchInput.placeholder = t('ph_title');
     }else if(mode === 'playlists'){
-      stats.innerHTML = statBlock(data.length,'재생목록 개수');
-      stats.style.display = 'grid';
-      searchInput.placeholder = '재생목록 이름으로 검색...';
+      stats.style.display = 'none';
+      searchInput.placeholder = t('ph_playlist');
     }else if(mode === 'subscriptions'){
-      stats.innerHTML = statBlock(data.length,'구독 채널 수');
-      stats.style.display = 'grid';
-      searchInput.placeholder = '채널 이름 검색...';
+      stats.style.display = 'none';
+      searchInput.placeholder = t('ph_channel');
       channelQueryInput.style.display = 'block';
-    }else if(mode === 'trending'){
-      const channels = new Set(data.map(v=>v.sub));
-      stats.innerHTML = statBlock(data.length,'인기 영상') + statBlock(channels.size,'채널 수');
-      stats.style.display = 'grid';
-      searchInput.placeholder = '인기 영상 검색...';
-      regionSelect.style.display = 'block';
-    }else if(mode === 'search'){
-      stats.innerHTML = statBlock(data.length,'검색 결과');
-      stats.style.display = 'grid';
-      searchInput.placeholder = '유튜브 전체 검색어 입력 후 Enter...';
     }else if(mode === 'playlistItems'){
       const channels = new Set(data.map(v=>v.sub));
-      stats.innerHTML = statBlock(data.length,'영상 수') + statBlock(channels.size,'채널 수');
+      stats.innerHTML = statBlock(data.length,t('st_videos')) + statBlock(channels.size,t('st_channels'));
       stats.style.display = 'grid';
-      searchInput.placeholder = '제목으로 검색...';
+      searchInput.placeholder = t('ph_title');
     }else{
       stats.style.display = 'none';
-      searchInput.placeholder = '제목으로 검색...';
+      searchInput.placeholder = t('ph_title');
     }
 
-    if(mode === 'liked' || mode === 'disliked' || mode === 'trending' || mode === 'search' || mode === 'playlistItems'){
+    if(mode === 'liked' || mode === 'disliked' || mode === 'playlistItems'){
       sortSelect.innerHTML = `
-        <option value="original">기본 순서</option>
-        <option value="title">이름순</option>
-        <option value="dateDesc">날짜 최신순</option>
-        <option value="dateAsc">날짜 오래된순</option>
-        <option value="durationDesc">영상 긴순</option>
-        <option value="durationAsc">영상 짧은순</option>
+        <option value="original">${t('sort_original')}</option>
+        <option value="title">${t('sort_title')}</option>
+        <option value="dateDesc">${t('sort_dateDesc')}</option>
+        <option value="dateAsc">${t('sort_dateAsc')}</option>
+        <option value="durationDesc">${t('sort_durDesc')}</option>
+        <option value="durationAsc">${t('sort_durAsc')}</option>
       `;
     }else{
       sortSelect.innerHTML = `
-        <option value="original">기본 순서</option>
-        <option value="title">이름순</option>
+        <option value="original">${t('sort_original')}</option>
+        <option value="title">${t('sort_title')}</option>
       `;
     }
 
     metaLeft.innerHTML = '';
     if(mode === 'playlistItems' && currentPlaylist){
       const backBtn = document.createElement('button');
-      backBtn.textContent = '◀ 재생목록으로';
+      backBtn.textContent = t('back_pl');
       backBtn.style.marginRight = '10px';
       backBtn.addEventListener('click', ()=>{ history.back(); });
       metaLeft.appendChild(backBtn);
@@ -1345,21 +1383,21 @@
     const counts = {};
     data.forEach(v=>{ if(v.sub) counts[v.sub] = (counts[v.sub]||0)+1; });
     const top = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).slice(0,300);
-    channelSelect.innerHTML = '<option value="">전체 채널</option>' +
+    channelSelect.innerHTML = '<option value="">' + t('all_channels') + '</option>' +
       top.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)} (${counts[c]})</option>`).join('');
   }
 
   function applyFilters(){
     const data = activeDataset();
     const q = searchInput.value.trim().toLowerCase();
-    const ch = (channelSelect && (mode==='liked'||mode==='disliked'||mode==='trending'||mode==='playlistItems')) ? channelSelect.value : '';
+    const ch = (channelSelect && (mode==='liked'||mode==='disliked'||mode==='playlistItems')) ? channelSelect.value : '';
     filtered = data.filter(v=>{
       if(ch && v.sub !== ch) return false;
       if(q && !v.title.toLowerCase().includes(q)) return false;
       return true;
     });
     if(sortSelect.value === 'title'){
-      filtered = filtered.slice().sort((a,b)=>a.title.localeCompare(b.title, 'ko'));
+      filtered = filtered.slice().sort((a,b)=>a.title.localeCompare(b.title, lang));
     }else if(sortSelect.value === 'dateDesc'){
       filtered = filtered.slice().sort((a,b)=> new Date(b.addedAt||b.createdAt||0) - new Date(a.addedAt||a.createdAt||0));
     }else if(sortSelect.value === 'dateAsc'){
@@ -1371,8 +1409,8 @@
     }
     page = 1;
     resultCount.textContent = q
-      ? filtered.length.toLocaleString() + '/' + data.length.toLocaleString() + '건 결과'
-      : filtered.length.toLocaleString() + '건 결과';
+      ? t('results_of', {n: filtered.length.toLocaleString(), total: data.length.toLocaleString()})
+      : t('results', {n: filtered.length.toLocaleString()});
 
     render();
   }
@@ -1398,7 +1436,7 @@
 
     if(itemsToRender.length === 0){
       listEl.innerHTML = '';
-      emptyHint.textContent = '검색 조건에 맞는 항목이 없어요.';
+      emptyHint.textContent = t('empty');
       emptyHint.style.display = 'block';
       pager.style.display = 'none';
       pagerTop.style.display = 'none';
@@ -1428,13 +1466,13 @@
         : `<div class="stub-sub">${
             v.channelId 
             ? `<a class="ch-link" href="https://www.youtube.com/channel/${escapeHtml(v.channelId)}" target="_blank" rel="noopener">${escapeHtml(v.sub)}</a>`
-            : escapeHtml(v.sub)
+            : escapeHtml(v.plCount != null ? t('n_videos', {n: v.plCount.toLocaleString()}) : v.sub)
           }</div>`;
       
       let playRowHtml = '';
       playRowHtml = (mode === 'subscriptions' && v.channelId) ? `
         <div class="play-row">
-          <button class="search-channel-external-btn" data-chid="${escapeHtml(v.channelId)}" data-idx="${idx}">🔍 채널내 동영상 검색</button>
+          <button class="search-channel-external-btn" data-chid="${escapeHtml(v.channelId)}" data-idx="${idx}">${t('ch_search')}</button>
         </div>
       ` : '';
 
@@ -1449,7 +1487,7 @@
             <p class="stub-title">${titleHtml}</p>
             ${subHtml}
             ${playRowHtml}
-            <div class="stamp-badge">${v.accountName ? `<span class="acct-tag">👤 ${escapeHtml(v.accountName)}</span> ` : ''}${escapeHtml(v.badge)}</div>
+            <div class="stamp-badge">${v.accountName ? `<span class="acct-tag">👤 ${escapeHtml(v.accountName)}</span> ` : ''}${escapeHtml(v.bm ? buildBadge(v.bm) : v.badge)}</div>
           </div>
         </div>
       `;
@@ -1570,19 +1608,8 @@
   }
 
   searchInput.addEventListener('input', ()=>{ 
-    if(mode === 'search') return; 
     clearTimeout(searchTimer); 
     searchTimer = setTimeout(applyFilters, 150); 
-  });
-
-  searchInput.addEventListener('keypress', (e)=>{
-    if(e.key === 'Enter' && mode === 'search') {
-      fetchGeneralSearch(searchInput.value.trim());
-    }
-  });
-
-  if(regionSelect) regionSelect.addEventListener('change', ()=>{
-    fetchTrending(regionSelect.value);
   });
 
   if(channelSelect) channelSelect.addEventListener('change', applyFilters);
@@ -1592,6 +1619,15 @@
   safeAddListener('themeToggle', 'click', async () => {
     document.documentElement.classList.toggle('light');
     await dbSet('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
+  });
+
+  safeAddListener('langToggle', 'click', async () => {
+    lang = lang === 'ko' ? 'en' : 'ko';
+    try { localStorage.setItem('yt_lang', lang); } catch(e) {}
+    applyStaticI18n();
+    await updateAccountList(await getAccountList());
+    const hasData = cache.all || cache.liked || cache.playlists || cache.subscriptions || viewingSelection;
+    if (hasData) onDataReady();
   });
 
   document.getElementById('saveDataBtn').addEventListener('click', () => {
