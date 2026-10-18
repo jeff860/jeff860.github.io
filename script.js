@@ -54,10 +54,10 @@
       saved_title: '이 기기의 브라우저에 저장된 데이터입니다. 삭제하기 전까지 남아 있고, 이 PC의 다른 사용자도 볼 수 있습니다. 로그인 없이도 볼 수 있습니다.',
       saved_title_short: '이 기기의 브라우저에 저장됨 (삭제 전까지 이 PC의 다른 사용자도 볼 수 있음)',
       counts: ' · 영상 {v}개 · 구독 {s}개',
-      save_current: '현재 데이터 저장', delete: '삭제',
+      save_current: '저장', delete: '삭제',
       confirm_delete: '정말 계정({name})의 모든 데이터를 삭제할까요?',
       delete_err: '삭제 중 오류가 발생했어요.',
-      quota: '⚠️ 불러온 데이터가 너무 많아서 임시 데이터로 보관할 수 없어요. 지금 화면은 그대로 보이지만, 새로고침하면 다시 불러와야 해요. 필요하면 "현재 데이터 저장" 버튼으로 이 기기에 저장하세요.',
+      quota: '⚠️ 불러온 데이터가 너무 많아서 임시 데이터로 보관할 수 없어요. 지금 화면은 그대로 보이지만, 새로고침하면 다시 불러와야 해요. 필요하면 "저장" 버튼으로 이 기기에 저장하세요.',
       cnt_eok: '억', cnt_man: '만', cnt_cheon: '천',
       lbl_created: '생성: ', lbl_added: '추가: ', lbl_views: '조회: ', lbl_likes: '좋아요: ',
       bd_none: '정보 없음', bd_liked: '좋아요', bd_disliked: '👎 싫어요', bd_playlist: '재생목록', bd_sub: '구독', bd_unknown: '생성일 미상',
@@ -67,8 +67,8 @@
       save_noacct: '계정이 식별되어야 저장할 수 있어요. 먼저 "불러오기"로 로그인해 주세요.',
       save_confirm: '⚠️ 이 데이터를 이 기기의 브라우저에 저장하면, 삭제하기 전까지 이 PC를 쓰는 다른 사용자도 볼 수 있습니다.\n개인 PC에만 저장하거나, 사용 후 삭제 버튼으로 삭제하세요.\n\n계속 저장하시겠습니까?',
       save_race: '그 사이에 데이터를 불러오기 시작했어요. 완료된 뒤에 다시 시도해 주세요.',
-      err_channel: '채널 정보를 확인하지 못했어요. "현재 데이터 저장"이 제한될 수 있어요.',
-      err_account: '계정 정보를 불러오는 중 오류가 발생했어요. "현재 데이터 저장"이 제한될 수 있어요.',
+      err_channel: '채널 정보를 확인하지 못했어요. "저장"이 제한될 수 있어요.',
+      err_account: '계정 정보를 불러오는 중 오류가 발생했어요. "저장"이 제한될 수 있어요.',
       err_popup: '로그인 창이 닫혔거나 권한이 거부됐어요. 다시 시도해 주세요.',
       err_origin: '현재 주소가 OAuth 클라이언트의 "승인된 자바스크립트 원본"에 등록돼 있지 않아요.',
       err_login: '로그인 중 오류가 발생했어요: {type}.', err_unknown: '알 수 없는 오류',
@@ -114,10 +114,10 @@
       saved_title: 'Data saved in this device\'s browser. It stays until you delete it, and other users of this PC can see it. You can view it without signing in.',
       saved_title_short: 'Saved in this device\'s browser (other users of this PC can see it until you delete it)',
       counts: ' · {v} videos · {s} subscriptions',
-      save_current: 'Save current data', delete: 'Delete',
+      save_current: 'Save', delete: 'Delete',
       confirm_delete: 'Delete all data for account ({name})?',
       delete_err: 'An error occurred while deleting.',
-      quota: '⚠️ There is too much data to keep as temporary data. What you see now stays on screen, but you will need to load it again after a refresh. If needed, use "Save current data" to save it on this device.',
+      quota: '⚠️ There is too much data to keep as temporary data. What you see now stays on screen, but you will need to load it again after a refresh. If needed, use "Save" to save it on this device.',
       cnt_eok: 'B', cnt_man: 'K', cnt_cheon: 'K',
       lbl_created: 'Created: ', lbl_added: 'Added: ', lbl_views: 'Views: ', lbl_likes: 'Likes: ',
       bd_none: 'No info', bd_liked: 'Liked', bd_disliked: '👎 Disliked', bd_playlist: 'Playlist', bd_sub: 'Subscription', bd_unknown: 'Creation date unknown',
@@ -127,8 +127,8 @@
       save_noacct: 'The account must be identified before saving. Please sign in with "Load" first.',
       save_confirm: '⚠️ If you save this data in this device\'s browser, other users of this PC can see it until you delete it.\nSave only on a personal PC, or delete it with the delete button after use.\n\nContinue saving?',
       save_race: 'Data loading started in the meantime. Please try again after it finishes.',
-      err_channel: 'Could not read channel info. "Save current data" may be limited.',
-      err_account: 'An error occurred while loading account info. "Save current data" may be limited.',
+      err_channel: 'Could not read channel info. "Save" may be limited.',
+      err_account: 'An error occurred while loading account info. "Save" may be limited.',
       err_popup: 'The sign-in window was closed or permission was denied. Please try again.',
       err_origin: 'The current address is not registered under "Authorized JavaScript origins" of the OAuth client.',
       err_login: 'An error occurred during sign-in: {type}.', err_unknown: 'unknown error',
@@ -745,7 +745,7 @@
     }
   });
 
-  // "현재 데이터 저장"은 화면에 지금 합쳐서 보여주는 데이터가 아니라, 항상 이번 탭의 "임시 데이터"(sessionStorage) 자체를 저장한다.
+  // "저장"은 화면에 지금 합쳐서 보여주는 데이터가 아니라, 항상 이번 탭의 "임시 데이터"(sessionStorage) 자체를 저장한다.
   // 그래야 여러 계정을 체크해서 합쳐 보는 중에 눌러도 다른 계정 데이터가 섞여서 저장되지 않는다.
   window.saveCurrentData = async function(){
       if (isLoading) {

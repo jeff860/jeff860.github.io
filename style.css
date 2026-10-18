@@ -141,4 +141,4 @@
   .intro-more li{margin:6px 0;line-height:1.55;}
   .intro-more b{color:var(--text);}
   .intro-more a{color:var(--accent);}
-  .tagline{margin:0 0 8px;font-size:16px;font-weight:700;line-height:1.4;color:var(--text);}
+  .tagline{margin:0;font-size:14px;line-height:1.4;}
