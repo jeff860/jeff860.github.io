@@ -22,7 +22,6 @@
   const resultCount = document.getElementById('resultCount');
   const dataSourceBadge = document.getElementById('dataSourceBadge');
   const totalVideoCount = document.getElementById('totalVideoCount');
-  const resetBtn = document.getElementById('resetBtn');
 
 
   // ---- 언어(한글/English) ----
@@ -38,7 +37,6 @@
       ph_search: '검색...', ph_channel_q: '채널 내 동영상 검색어...',
       nav_scroll: '스크롤', nav_pages: '페이지',
       export: '💾 데이터 저장',
-      reset: '로그아웃 및 전환',
       footer: '이 앱은 youtube.readonly(읽기 전용) 권한만 요청합니다.',
       zero_results: '0건 결과',
       tmp_badge: '🧠 임시 데이터', saved_badge: '📦 저장된 데이터',
@@ -92,7 +90,6 @@
       ph_search: 'Search...', ph_channel_q: 'Search videos in channel...',
       nav_scroll: 'Scroll', nav_pages: 'Pages',
       export: '💾 Export data',
-      reset: 'Log out & switch',
       footer: 'This app requests only the youtube.readonly (read-only) permission.',
       zero_results: '0 results',
       tmp_badge: '🧠 Temporary data', saved_badge: '📦 Saved data',
@@ -608,6 +605,20 @@
     const pre = !m.pre ? '' : (m.pre.k ? t(m.pre.k) : t('src_pl', {title: m.pre.pl}));
     return pre + fmtDates(m.c, m.a, m.v, m.l, m.d ? t(m.d) : '');
   }
+  // 예전 버전으로 불러와 저장된 데이터는 배지가 한글 문자열로만 들어 있다(bm 없음). 영어 화면에서는 그 문구를 번역해 보여준다.
+  function legacyBadgeEn(str){
+    if (lang !== 'en' || !str || !/[가-힣]/.test(str)) return str;
+    const mult = { '억': 1e8, '만': 1e4, '천': 1e3 };
+    const short = n => n >= 1e9 ? (n/1e9).toFixed(1)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : (n/1e3).toFixed(1)+'K';
+    return str
+      .replace(/(\d+(?:\.\d+)?)(억|만|천)/g, (m, num, u) => short(parseFloat(num) * mult[u]))
+      .replace(/(\d{2})\. (\d{2})\. (\d{2})\./g, (m, y, mo, d) => new Date(2000 + +y, +mo - 1, +d).toLocaleDateString('en-US', {year:'2-digit', month:'2-digit', day:'2-digit'}))
+      .replace(/출처: 좋아요/g, 'Source: Liked').replace(/출처: /g, 'Source: ')
+      .replace(/생성일 미상/g, 'Creation date unknown').replace(/정보 없음/g, 'No info')
+      .replace(/생성: /g, 'Created: ').replace(/추가: /g, 'Added: ').replace(/조회: /g, 'Views: ').replace(/좋아요: /g, 'Likes: ')
+      .replace(/👎 싫어요/g, '👎 Disliked').replace(/재생목록/g, 'Playlist').replace(/구독/g, 'Subscription').replace(/좋아요/g, 'Liked');
+  }
+
   function bmeta(c, a, v, l, defKey, pre){
     const bm = { c, a, v, l, d: defKey, pre: pre || null };
     return { badge: buildBadge(bm), bm };
@@ -837,38 +848,6 @@
     tokenClient = initTokenClient();
     if(tokenClient) tokenClient.requestAccessToken({prompt: 'consent'});
   });
-
-  resetBtn.addEventListener('click', doReset);
-
-  async function doReset(){
-    if(accessToken && window.google && google.accounts && google.accounts.oauth2){
-      google.accounts.oauth2.revoke(accessToken, ()=>{});
-    }
-    accessToken = null;
-    tokenExpiresAt = null;
-    sessionStorage.removeItem('yt_access_token');
-    sessionStorage.removeItem('yt_token_expires_at');
-    sessionStorage.removeItem('yt_live_account_id');
-    sessionStorage.removeItem('yt_live_account_name');
-    sessionStorage.removeItem('yt_live_account_saved');
-    liveAccountId = null;
-    liveAccountName = null;
-    liveAccountSaved = false;
-    clearSessionCache();
-
-    // UI updates to reflect logged-out state
-    loginBtn.style.display = 'inline-block';
-
-    // 임시 데이터 선택은 로그아웃과 함께 해제된다. 다른 저장된 데이터를 같이 선택해서 보고 있었다면 그건 그대로 둔다.
-    selectedAccountIds.delete('__temp__');
-    await updateAccountList(await getAccountList());
-    if (selectedAccountIds.size > 0) {
-      await onSelectionChange();
-    } else {
-      resetToEmptyState();
-    }
-    clearError();
-  }
 
   document.querySelectorAll('.tabbar button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
@@ -1487,7 +1466,7 @@
             <p class="stub-title">${titleHtml}</p>
             ${subHtml}
             ${playRowHtml}
-            <div class="stamp-badge">${v.accountName ? `<span class="acct-tag">👤 ${escapeHtml(v.accountName)}</span> ` : ''}${escapeHtml(v.bm ? buildBadge(v.bm) : v.badge)}</div>
+            <div class="stamp-badge">${v.accountName ? `<span class="acct-tag">👤 ${escapeHtml(v.accountName)}</span> ` : ''}${escapeHtml(v.bm ? buildBadge(v.bm) : legacyBadgeEn(v.badge))}</div>
           </div>
         </div>
       `;
