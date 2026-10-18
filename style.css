@@ -131,3 +131,14 @@
     .play-row { flex-direction: column; }
     .play-row button, .play-row a { width: 100%; text-align: center; }
   }
+
+  /* ---- 불러오기 안내(짧은 줄 + 펼치기) ---- */
+  .intro{margin-bottom:14px;}
+  .intro-line{margin:0 0 6px;font-size:13px;line-height:1.5;color:var(--text);}
+  .intro-more{font-size:12.5px;color:var(--text-dim);}
+  .intro-more summary{cursor:pointer;color:var(--accent);width:max-content;user-select:none;}
+  .intro-more ul{margin:8px 0 6px;padding-left:4px;list-style:none;}
+  .intro-more li{margin:6px 0;line-height:1.55;}
+  .intro-more b{color:var(--text);}
+  .intro-more a{color:var(--accent);}
+  .tagline{margin:0 0 8px;font-size:16px;font-weight:700;line-height:1.4;color:var(--text);}

@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Youtube Search</title>
+<title>My YouTube Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,17 +19,38 @@
       <button id="langToggle" style="background:var(--hover);color:var(--text);border:none;padding:5px 10px;border-radius:15px;cursor:pointer;font-size:12px;margin-right:6px;"><b>한글</b> / English</button>
       <button id="themeToggle" data-i18n="theme" style="background:var(--hover);color:var(--text);border:none;padding:5px 10px;border-radius:15px;cursor:pointer;font-size:12px;">테마 변경</button>
     </div>
-    <h1>My Youtube Search</h1>
+    <h1>My YouTube Library</h1>
     </header>
 
   <div class="desk">
-    <h2>My YouTube</h2>
     <div class="field" style="display:none;">
       <label for="clientIdInput">OAuth 클라이언트 ID</label>
       <input type="text" id="clientIdInput" value="654010223092-aqucn2vtp4kg8ltnrbm7042g4bmifqp9.apps.googleusercontent.com" autocomplete="off">
     </div>
     
-    <div id="accountContainer" style="margin-bottom: 15px; display: none;">
+    <p class="tagline" data-i18n="tagline">내 유튜브 좋아요·재생목록·구독 동영상 검색</p>
+    <div class="intro">
+      <p class="intro-line" data-i18n-html="intro_html">불러오기를 누르면 Google 로그인 창이 열려요. <b>읽기 전용</b>이고, <b>데이터는 내 브라우저 안에서만</b> 처리돼요.</p>
+      <details class="intro-more">
+        <summary data-i18n="intro_more">자세히</summary>
+        <ul>
+          <li data-i18n-html="sec_1">🔒 <b>비밀번호는 이 앱에 전달되지 않아요.</b> 로그인은 Google 창에서 진행되고, 이 앱은 비밀번호를 볼 수 없어요.</li>
+          <li data-i18n-html="sec_2">👀 <b>읽기만 해요.</b> 좋아요·재생목록·구독을 조회만 하고, 수정·삭제·업로드는 할 수 없어요.</li>
+          <li data-i18n-html="sec_3">💻 <b>내 브라우저 안에서만 처리돼요.</b> 별도 서버가 없어서 내 유튜브 정보가 운영자에게 전송되거나 저장되지 않아요.</li>
+          <li data-i18n-html="sec_4">🔑 <b>불러온 직후 바로 자동 로그아웃 해요.</b></li>
+          <li data-i18n-html="sec_5">🧹 <b>탭을 닫으면 사라져요.</b> 이 기기에 저장하는 것도 내가 "저장"을 눌렀을 때만이에요.</li>
+        </ul>
+      </details>
+    </div>
+    <div class="btn-row">
+      <button class="primary" id="loginBtn" data-i18n="load">불러오기</button>
+      <button class="danger-btn" id="deleteDbBtn" data-i18n="del_db" style="display:none;">현재 계정 DB 삭제</button>
+    </div>
+    <div class="status-line" id="statusLine"></div>
+    <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="err-msg" id="errMsg"></div>
+
+    <div id="accountContainer" style="margin-top: 16px; display: none;">
         <div id="storageInfoNote" data-i18n-html="note_html" style="font-size:11px; color:var(--text-dim); margin:0 0 12px 0;">
           🧠 <b>임시 데이터</b>: 탭/브라우저를 닫으면 삭제됨 &nbsp;·&nbsp; 📦 <b>저장된 데이터</b>: 이 기기 브라우저에 저장됨 (삭제 전까지 이 PC의 다른 사용자도 볼 수 있음)
         </div>
@@ -36,15 +59,6 @@
             <div id="accountList" style="margin-top: 10px;"></div>
         </div>
     </div>
-
-    <p data-i18n="intro" style="font-size:13px; color:#5a4e38; margin-top:0; margin-bottom:14px;">불러오기 버튼을 누르면 Google 로그인 창이 나타나며, 내 유튜브 서고에 접근합니다.</p>
-    <div class="btn-row">
-      <button class="primary" id="loginBtn" data-i18n="load">불러오기</button>
-      <button class="danger-btn" id="deleteDbBtn" data-i18n="del_db" style="display:none;">현재 계정 DB 삭제</button>
-    </div>
-    <div class="status-line" id="statusLine"></div>
-    <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="err-msg" id="errMsg"></div>
   </div>
 
   <div class="tabbar" id="tabbar">
@@ -81,8 +95,9 @@
   <div class="empty-hint" id="emptyHint"></div>
   <div class="pager" id="pager"></div>
 
-  <footer data-i18n="footer">
-    이 앱은 youtube.readonly(읽기 전용) 권한만 요청합니다.
+  <footer>
+    <span data-i18n="footer">이 앱은 youtube.readonly(읽기 전용) 권한만 요청합니다.</span>
+    · <a href="privacy.html" data-i18n="privacy" style="color:inherit;">개인정보처리방침</a>
   </footer>
 </div>
 

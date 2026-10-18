@@ -30,7 +30,14 @@
       theme: '테마 변경',
       note_html: '🧠 <b>임시 데이터</b>: 탭/브라우저를 닫으면 삭제됨 &nbsp;·&nbsp; 📦 <b>저장된 데이터</b>: 이 기기 브라우저에 저장됨 (삭제 전까지 이 PC의 다른 사용자도 볼 수 있음)',
       data_label: '데이터:',
-      intro: '불러오기 버튼을 누르면 Google 로그인 창이 나타나며, 내 유튜브 서고에 접근합니다.',
+      tagline: '내 유튜브 좋아요·재생목록·구독 동영상 검색',
+      intro_html: '불러오기를 누르면 Google 로그인 창이 열려요. <b>읽기 전용</b>이고, <b>데이터는 내 브라우저 안에서만</b> 처리돼요.',
+      intro_more: '자세히',
+      sec_1: '🔒 <b>비밀번호는 이 앱에 전달되지 않아요.</b> 로그인은 Google 창에서 진행되고, 이 앱은 비밀번호를 볼 수 없어요.',
+      sec_2: '👀 <b>읽기만 해요.</b> 좋아요·재생목록·구독을 조회만 하고, 수정·삭제·업로드는 할 수 없어요.',
+      sec_3: '💻 <b>내 브라우저 안에서만 처리돼요.</b> 별도 서버가 없어서 내 유튜브 정보가 운영자에게 전송되거나 저장되지 않아요.',
+      sec_4: '🔑 <b>불러온 직후 바로 자동 로그아웃 해요.</b>',
+      sec_5: '🧹 <b>탭을 닫으면 사라져요.</b> 이 기기에 저장하는 것도 내가 "저장"을 눌렀을 때만이에요.',
       load: '불러오기',
       del_db: '현재 계정 DB 삭제',
       tab_all: '전체보기', tab_liked: '좋아요', tab_disliked: '👎 싫어요', tab_playlists: '재생목록', tab_subs: '구독', tab_comments: '💬 내 댓글 ↗',
@@ -38,6 +45,7 @@
       nav_scroll: '스크롤', nav_pages: '페이지',
       export: '💾 데이터 저장',
       footer: '이 앱은 youtube.readonly(읽기 전용) 권한만 요청합니다.',
+      privacy: '개인정보처리방침',
       zero_results: '0건 결과',
       tmp_badge: '🧠 임시 데이터', saved_badge: '📦 저장된 데이터',
       tmp_title_new: '방금 YouTube에서 불러온 임시 데이터입니다. 새로고침해도 유지되지만, 탭/브라우저를 닫으면 삭제됩니다.',
@@ -48,7 +56,6 @@
       counts: ' · 영상 {v}개 · 구독 {s}개',
       save_current: '현재 데이터 저장', delete: '삭제',
       confirm_delete: '정말 계정({name})의 모든 데이터를 삭제할까요?',
-      deleted: '데이터와 계정 정보가 삭제되었습니다.',
       delete_err: '삭제 중 오류가 발생했어요.',
       quota: '⚠️ 불러온 데이터가 너무 많아서 임시 데이터로 보관할 수 없어요. 지금 화면은 그대로 보이지만, 새로고침하면 다시 불러와야 해요. 필요하면 "현재 데이터 저장" 버튼으로 이 기기에 저장하세요.',
       cnt_eok: '억', cnt_man: '만', cnt_cheon: '천',
@@ -83,7 +90,14 @@
       theme: 'Theme',
       note_html: '🧠 <b>Temporary data</b>: deleted when you close the tab/browser &nbsp;·&nbsp; 📦 <b>Saved data</b>: stored in this device\'s browser (other users of this PC can see it until you delete it)',
       data_label: 'Data:',
-      intro: 'Click Load to open the Google sign-in window and read your YouTube library (read-only).',
+      tagline: 'Search your YouTube liked videos, playlists and subscriptions',
+      intro_html: 'Clicking Load opens a Google sign-in window. It is <b>read-only</b>, and <b>your data is processed only inside your browser</b>.',
+      intro_more: 'Details',
+      sec_1: '🔒 <b>Your password never reaches this app.</b> You sign in on Google\'s own window; the app cannot see your password.',
+      sec_2: '👀 <b>Read-only.</b> It only views your likes, playlists and subscriptions — it cannot edit, delete or upload anything.',
+      sec_3: '💻 <b>Processed inside your browser.</b> There is no server, so your YouTube info is never sent to or stored by the operator.',
+      sec_4: '🔑 <b>You are signed out automatically right after loading.</b>',
+      sec_5: '🧹 <b>Gone when you close the tab.</b> Anything saved on this device is saved only if you press "Save".',
       load: 'Load',
       del_db: 'Delete current account DB',
       tab_all: 'All', tab_liked: 'Liked', tab_disliked: '👎 Disliked', tab_playlists: 'Playlists', tab_subs: 'Subscriptions', tab_comments: '💬 My comments ↗',
@@ -91,6 +105,7 @@
       nav_scroll: 'Scroll', nav_pages: 'Pages',
       export: '💾 Export data',
       footer: 'This app requests only the youtube.readonly (read-only) permission.',
+      privacy: 'Privacy Policy',
       zero_results: '0 results',
       tmp_badge: '🧠 Temporary data', saved_badge: '📦 Saved data',
       tmp_title_new: 'Temporary data just loaded from YouTube. It survives a refresh, but is deleted when you close the tab/browser.',
@@ -101,7 +116,6 @@
       counts: ' · {v} videos · {s} subscriptions',
       save_current: 'Save current data', delete: 'Delete',
       confirm_delete: 'Delete all data for account ({name})?',
-      deleted: 'Data and account info have been deleted.',
       delete_err: 'An error occurred while deleting.',
       quota: '⚠️ There is too much data to keep as temporary data. What you see now stays on screen, but you will need to load it again after a refresh. If needed, use "Save current data" to save it on this device.',
       cnt_eok: 'B', cnt_man: 'K', cnt_cheon: 'K',
@@ -397,10 +411,23 @@
     };
 
     tx.oncomplete = async () => {
-        alert(t('deleted'));
         // 지금 선택(체크)되어 보고 있던 계정이었을 때만 화면에서도 제거한다 (다른 걸 보고 있었다면 그대로 유지)
-        const wasSelected = selectedAccountIds.has(accountId);
+        let wasSelected = selectedAccountIds.has(accountId);
         selectedAccountIds.delete(accountId);
+        // 이번 탭에서 불러와 저장했던 바로 그 계정을 지우면, 임시 데이터(세션)도 함께 지운다.
+        // 그대로 두면 목록에는 아무것도 없는데 임시 데이터의 영상 목록만 화면에 남는다.
+        if (accountId === liveAccountId) {
+            wasSelected = wasSelected || selectedAccountIds.has('__temp__');
+            selectedAccountIds.delete('__temp__');
+            accessToken = null;
+            tokenExpiresAt = null;
+            ['yt_access_token','yt_token_expires_at','yt_live_account_id','yt_live_account_name','yt_live_account_saved'].forEach(k => sessionStorage.removeItem(k));
+            liveAccountId = null;
+            liveAccountName = null;
+            liveAccountSaved = false;
+            clearSessionCache();
+            loginBtn.style.display = 'inline-block';
+        }
         await updateAccountList(updatedList || []);
         if (wasSelected) {
             await onSelectionChange();
@@ -672,6 +699,14 @@
       currentAccountId = liveAccountId;
       currentAccountName = liveAccountName;
       restoreSessionCache();
+      // 저장했던 계정이 그 사이 삭제됐다면 "저장됨" 표시를 풀어 임시 데이터 줄이 다시 보이게 한다
+      if (liveAccountSaved) {
+        const savedList = await getAccountList();
+        if (!savedList.some(a => (typeof a === 'object' ? a.id : a) === liveAccountId)) {
+          liveAccountSaved = false;
+          sessionStorage.removeItem('yt_live_account_saved');
+        }
+      }
       // 이미 저장한 계정이면 목록에서 "임시 데이터" 줄이 숨겨지므로, 화면의 데이터와 맞게 저장된 계정 줄을 체크한다
       selectedAccountIds = new Set([liveAccountSaved ? liveAccountId : '__temp__']);
       viewingSelection = false;

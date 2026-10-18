@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy · My YouTube Library</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  .doc{line-height:1.7;font-size:14px;}
+  .doc h2{font-size:17px;margin:26px 0 8px;}
+  .doc ul{padding-left:20px;margin:6px 0;}
+  .doc li{margin:4px 0;}
+  .doc a{color:var(--accent);}
+  .doc .meta{color:var(--text-dim);font-size:12px;}
+  .doc .lim{border-left:3px solid var(--accent);padding:6px 12px;margin:10px 0;background:var(--hover);}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap;}
+  .top button{background:var(--hover);color:var(--text);border:none;padding:5px 10px;border-radius:15px;cursor:pointer;font-size:12px;}
+  [data-lang]{display:none;}
+  html[lang="ko"] [data-lang="ko"], html[lang="en"] [data-lang="en"]{display:block;}
+  html[lang="ko"] span[data-lang="ko"], html[lang="en"] span[data-lang="en"]{display:inline;}
+</style>
+</head>
+<body>
+<div class="wrap doc">
+  <div class="top">
+    <a href="./">← My YouTube Library</a>
+    <button id="langToggle"><b>한글</b> / English</button>
+  </div>
+
+  <!-- ===================== 한국어 ===================== -->
+  <div data-lang="ko">
+    <h1>개인정보처리방침</h1>
+    <p class="meta">시행일: 2026년 10월 18일</p>
+
+    <p>"My YouTube Library"(이하 "본 앱")는 사용자가 본인의 YouTube 계정에 있는 좋아요·싫어요 영상, 재생목록, 구독 채널을 한곳에서 검색하고 정리해 볼 수 있게 해 주는 웹 페이지입니다. 본 방침은 본 앱이 어떤 정보에 접근하고, 어떻게 쓰고, 어디에 보관하는지 설명합니다.</p>
+
+    <h2>1. 접근하는 정보</h2>
+    <p>사용자가 Google 계정으로 로그인하고 동의하면, 본 앱은 아래 권한 하나만 요청합니다.</p>
+    <ul>
+      <li><code>https://www.googleapis.com/auth/youtube.readonly</code> — YouTube 계정을 <b>읽기 전용</b>으로 조회</li>
+    </ul>
+    <p>이 권한으로 다음 데이터를 읽습니다: 본인 채널 식별 정보(채널 ID, 채널 이름), 좋아요·싫어요 표시한 영상 목록, 재생목록과 그 안의 영상, 구독 채널 목록, 그리고 해당 영상의 제목·썸네일·길이·조회수·좋아요 수 같은 공개 정보. 본 앱은 YouTube 데이터를 <b>수정·삭제·업로드하지 않습니다</b>. 이메일 주소 등 다른 Google 계정 정보는 요청하지 않습니다.</p>
+
+    <h2>2. 정보의 이용 목적</h2>
+    <p>읽어 온 데이터는 사용자 본인의 화면에 목록으로 보여주고, 검색·정렬·필터링하는 용도로만 사용합니다. 그 외의 목적(광고, 프로파일링, 판매, 분석 등)에는 사용하지 않습니다.</p>
+
+    <h2>3. 정보의 저장 위치와 전송</h2>
+    <ul>
+      <li><b>별도의 서버가 없습니다.</b> 본 앱은 정적 웹 페이지이며, 사용자의 브라우저가 Google(YouTube) API와 직접 통신합니다. 운영자는 사용자의 YouTube 데이터를 수집·전송·열람할 수 없습니다.</li>
+      <li><b>임시 데이터</b>: 불러온 데이터는 브라우저의 세션 저장소에 보관되며, 탭 또는 브라우저를 닫으면 삭제됩니다.</li>
+      <li><b>저장된 데이터</b>: 사용자가 "현재 데이터 저장"을 직접 눌렀을 때만 이 기기의 브라우저(IndexedDB)에 저장됩니다. 삭제하기 전까지 남아 있고, 같은 PC·브라우저를 쓰는 다른 사용자도 볼 수 있으므로 개인 PC에서만 저장하거나 사용 후 삭제 버튼으로 삭제하세요.</li>
+      <li><b>액세스 토큰</b>: 데이터를 불러오는 동안에만 사용하며, 불러오기가 끝나면 Google에 폐기를 요청하고 즉시 지웁니다. 토큰은 저장하거나 서버로 보내지 않습니다.</li>
+      <li><b>환경 설정</b>: 언어와 테마 선택은 이 기기의 브라우저(localStorage/IndexedDB)에만 저장됩니다.</li>
+    </ul>
+
+    <h2>4. 제3자 제공 및 공유</h2>
+    <p>운영자는 사용자의 YouTube 데이터를 제3자에게 제공·판매·공유하지 않습니다. 다만 본 앱을 사용할 때 다음 외부 서비스와 통신이 발생합니다.</p>
+    <ul>
+      <li>Google 로그인 및 YouTube Data API — 인증과 데이터 조회 (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 개인정보처리방침</a>)</li>
+      <li>Google Fonts — 글꼴 로드 시 사용자의 IP 주소 등이 Google에 전달될 수 있음</li>
+      <li>YouTube — 영상 썸네일 및 영상 재생 시</li>
+      <li>광고(Google AdSense)를 게재하는 경우: Google 및 광고 파트너가 쿠키 등을 사용해 광고를 제공·측정할 수 있습니다. 광고에는 사용자의 YouTube 데이터를 사용하지 않으며, 로그인 후 사용자의 데이터가 표시되는 화면에는 광고를 넣지 않습니다. 맞춤 광고는 <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google 광고 설정</a>에서 해제할 수 있습니다.</li>
+    </ul>
+
+    <h2>5. Google API 서비스 사용자 데이터 정책 준수</h2>
+    <div class="lim">본 앱이 Google API로부터 받은 정보의 사용 및 다른 앱으로의 전송은 <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API 서비스 사용자 데이터 정책</a>(제한적 사용 요건 포함)을 준수합니다.</div>
+
+    <h2>6. 사용자의 권리와 데이터 삭제</h2>
+    <ul>
+      <li><b>임시 데이터</b>: 탭·브라우저를 닫으면 삭제됩니다.</li>
+      <li><b>저장된 데이터</b>: 앱 목록의 "삭제" 버튼으로 삭제하거나, 브라우저의 사이트 데이터 삭제로 지울 수 있습니다.</li>
+      <li><b>접근 권한 철회</b>: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google 계정 &gt; 보안 &gt; 타사 앱 액세스</a>에서 언제든 본 앱의 권한을 제거할 수 있습니다.</li>
+    </ul>
+
+    <h2>7. 아동</h2>
+    <p>본 앱은 만 13세 미만 아동을 대상으로 하지 않으며, 아동의 정보를 의도적으로 수집하지 않습니다.</p>
+
+    <h2>8. 방침의 변경</h2>
+    <p>방침이 바뀌면 이 페이지를 갱신하고 시행일을 수정합니다.</p>
+
+    <h2>9. 문의</h2>
+    <p>개인정보 관련 문의: <b>[연락처 이메일을 여기에 입력]</b></p>
+  </div>
+
+  <!-- ===================== English ===================== -->
+  <div data-lang="en">
+    <h1>Privacy Policy</h1>
+    <p class="meta">Effective date: October 18, 2026</p>
+
+    <p>"My YouTube Library" (the "App") is a web page that lets you search and browse the videos you liked or disliked, your playlists, and your subscriptions in your own YouTube account. This policy explains what information the App accesses, how it is used, and where it is kept.</p>
+
+    <h2>1. Information the App accesses</h2>
+    <p>When you sign in with your Google account and give consent, the App requests only the following scope:</p>
+    <ul>
+      <li><code>https://www.googleapis.com/auth/youtube.readonly</code> — <b>read-only</b> access to your YouTube account</li>
+    </ul>
+    <p>With this scope the App reads: your channel identity (channel ID and name), the list of videos you liked or disliked, your playlists and the videos in them, your subscribed channels, and public details of those videos such as title, thumbnail, duration, view count and like count. The App <b>never modifies, deletes or uploads</b> anything in your YouTube account. It does not request your email address or other Google account details.</p>
+
+    <h2>2. How the information is used</h2>
+    <p>The data is used only to display it to you as a list and to let you search, sort and filter it. It is not used for advertising, profiling, sale, analytics or any other purpose.</p>
+
+    <h2>3. Where data is stored and whether it is transmitted</h2>
+    <ul>
+      <li><b>There is no server.</b> The App is a static web page; your browser talks directly to the Google (YouTube) APIs. The operator cannot collect, receive or view your YouTube data.</li>
+      <li><b>Temporary data</b>: loaded data is kept in the browser's session storage and is deleted when you close the tab or browser.</li>
+      <li><b>Saved data</b>: stored in this device's browser (IndexedDB) only when you press "Save current data". It stays until you delete it, and other users of the same PC and browser can see it — save only on a personal PC, or delete it with the delete button after use.</li>
+      <li><b>Access token</b>: used only while data is loading; when loading finishes the App asks Google to revoke it and erases it immediately. The token is never stored or sent to any server.</li>
+      <li><b>Preferences</b>: your language and theme choices are stored only in this device's browser (localStorage/IndexedDB).</li>
+    </ul>
+
+    <h2>4. Sharing with third parties</h2>
+    <p>The operator does not provide, sell or share your YouTube data with any third party. Using the App does involve communication with these external services:</p>
+    <ul>
+      <li>Google Sign-In and the YouTube Data API — authentication and data retrieval (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>)</li>
+      <li>Google Fonts — loading fonts may send your IP address and similar details to Google</li>
+      <li>YouTube — for video thumbnails and when you play a video</li>
+      <li>If ads (Google AdSense) are shown: Google and its advertising partners may use cookies to serve and measure ads. Your YouTube data is not used for ads, and no ads are placed on the screens that show your data after sign-in. You can opt out of personalized ads in <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
+    </ul>
+
+    <h2>5. Compliance with the Google API Services User Data Policy</h2>
+    <div class="lim">The App's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</div>
+
+    <h2>6. Your choices and deleting data</h2>
+    <ul>
+      <li><b>Temporary data</b>: deleted when you close the tab or browser.</li>
+      <li><b>Saved data</b>: delete it with the "Delete" button in the App's list, or clear the site's data in your browser.</li>
+      <li><b>Revoking access</b>: you can remove the App's access at any time under <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account &gt; Security &gt; Third-party access</a>.</li>
+    </ul>
+
+    <h2>7. Children</h2>
+    <p>The App is not directed to children under 13 and does not knowingly collect information from children.</p>
+
+    <h2>8. Changes to this policy</h2>
+    <p>If this policy changes, this page will be updated and the effective date revised.</p>
+
+    <h2>9. Contact</h2>
+    <p>Privacy questions: <b>[enter your contact email here]</b></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var lang = 'ko';
+  try { lang = localStorage.getItem('yt_lang') || ((navigator.language || '').toLowerCase().indexOf('ko') === 0 ? 'ko' : 'en'); } catch(e) {}
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.classList.add('light');
+  var btn = document.getElementById('langToggle');
+  function apply(){
+    document.documentElement.lang = lang;
+    btn.innerHTML = lang === 'ko' ? '<b>한글</b> / English' : '한글 / <b>English</b>';
+    document.title = lang === 'ko' ? '개인정보처리방침 · My YouTube Library' : 'Privacy Policy · My YouTube Library';
+  }
+  btn.addEventListener('click', function(){
+    lang = lang === 'ko' ? 'en' : 'ko';
+    try { localStorage.setItem('yt_lang', lang); } catch(e) {}
+    apply();
+  });
+  apply();
+})();
+</script>
+</body>
+</html>
