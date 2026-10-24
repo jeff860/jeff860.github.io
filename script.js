@@ -67,7 +67,6 @@
       save_noacct: '계정이 식별되어야 저장할 수 있어요. 먼저 "불러오기"로 로그인해 주세요.',
       save_confirm: '⚠️ 이 데이터를 이 기기의 브라우저에 저장하면, 삭제하기 전까지 이 PC를 쓰는 다른 사용자도 볼 수 있습니다.\n개인 PC에만 저장하거나, 사용 후 삭제 버튼으로 삭제하세요.\n\n계속 저장하시겠습니까?',
       save_race: '그 사이에 데이터를 불러오기 시작했어요. 완료된 뒤에 다시 시도해 주세요.',
-      err_channel: '채널 정보를 확인하지 못했어요. "저장"이 제한될 수 있어요.',
       err_account: '계정 정보를 불러오는 중 오류가 발생했어요. "저장"이 제한될 수 있어요.',
       err_popup: '로그인 창이 닫혔거나 권한이 거부됐어요. 다시 시도해 주세요.',
       err_origin: '현재 주소가 OAuth 클라이언트의 "승인된 자바스크립트 원본"에 등록돼 있지 않아요.',
@@ -127,7 +126,6 @@
       save_noacct: 'The account must be identified before saving. Please sign in with "Load" first.',
       save_confirm: '⚠️ If you save this data in this device\'s browser, other users of this PC can see it until you delete it.\nSave only on a personal PC, or delete it with the delete button after use.\n\nContinue saving?',
       save_race: 'Data loading started in the meantime. Please try again after it finishes.',
-      err_channel: 'Could not read channel info. "Save" may be limited.',
       err_account: 'An error occurred while loading account info. "Save" may be limited.',
       err_popup: 'The sign-in window was closed or permission was denied. Please try again.',
       err_origin: 'The current address is not registered under "Authorized JavaScript origins" of the OAuth client.',
@@ -835,11 +833,26 @@
             console.log('--- [STAGE 2: Brand Account Details] ---');
             console.log('Channel Data:', data);
 
+            let channelId, channelTitle;
             if (data.items && data.items.length > 0) {
-                const channelId = data.items[0].id;
-                const channelTitle = data.items[0].snippet.title; // Get user-friendly name
-                console.log('Final Account ID generated:', channelId, 'with name:', channelTitle);
-
+                channelId = data.items[0].id;
+                channelTitle = data.items[0].snippet.title; // Get user-friendly name
+            } else {
+                // 채널이 없는 계정: guest<번호>(MMDD) 로 계정을 만들어 저장할 수 있게 한다
+                const list = await getAccountList();
+                let n = 0;
+                list.forEach(a => {
+                    const m = /^guest_(\d+)$/.exec(typeof a === 'object' ? a.id : a);
+                    if (m) n = Math.max(n, Number(m[1]));
+                });
+                n++;
+                const d = new Date();
+                const mmdd = String(d.getMonth()+1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+                channelId = 'guest_' + n;
+                channelTitle = 'guest' + n + '(' + mmdd + ')';
+            }
+            console.log('Final Account ID generated:', channelId, 'with name:', channelTitle);
+            {
                 liveAccountId = channelId;
                 liveAccountName = channelTitle;
                 sessionStorage.setItem('yt_live_account_id', liveAccountId);
@@ -848,8 +861,6 @@
                 currentAccountName = liveAccountName;
                 // "저장" 버튼을 눌러야만 계정이 실제로 IndexedDB 목록에 등록된다 (불러오기만으로는 등록 안 함)
                 await updateAccountList(await getAccountList());
-            } else {
-                showError(t('err_channel'));
             }
           } catch (e) {
             showError(t('err_account'));
