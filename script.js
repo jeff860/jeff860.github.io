@@ -952,6 +952,12 @@
         const reason = body.error && body.error.errors && body.error.errors[0] && body.error.errors[0].reason;
         if(reason === 'channelNotFound') throw new Error('NO_CHANNEL');
       }
+      if(res.status === 404){
+        // 채널이 없는 계정의 재생목록·구독 조회(channelNotFound)는 오류로 보여주지 않고 빈 목록으로 처리
+        const body = await res.json().catch(()=>({}));
+        const reason = body.error && body.error.errors && body.error.errors[0] && body.error.errors[0].reason;
+        if(reason === 'channelNotFound') break;
+      }
       if(!res.ok) throw new Error('HTTP_' + res.status);
       const data = await res.json();
       onPage(data.items || []);
