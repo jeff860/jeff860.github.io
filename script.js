@@ -73,6 +73,8 @@
       err_login: '로그인 중 오류가 발생했어요: {type}.', err_unknown: '알 수 없는 오류',
       err_file: 'file:// 경로에서는 로그인이 동작하지 않아요. 터미널에서 python3 -m http.server 8000 을 실행한 뒤 http://localhost:8000 으로 접속해 주세요.',
       loading: '불러오는 중...', loading_n: '불러오는 중... {n}건',
+      no_channel: 'YouTube 채널이 없는 계정입니다. 임시 계정(guest)으로 저장돼요.',
+      no_channel_link: '채널 만들기',
       err_expired: '로그인 토큰이 없거나 만료됐어요. 이 작업은 다시 로그인해야 해요. (다시 불러오면 지금 데이터는 새로 교체돼요)',
       err_403: '접근이 거부됐어요 (403). API 활성화 여부와 테스트 사용자 등록 여부를 확인해 주세요.', detail: ' 상세: ',
       err_load: '데이터를 불러오는 중 오류가 발생했어요 ({msg}).',
@@ -132,6 +134,8 @@
       err_login: 'An error occurred during sign-in: {type}.', err_unknown: 'unknown error',
       err_file: 'Sign-in does not work from file://. Run python3 -m http.server 8000 in a terminal, then open http://localhost:8000.',
       loading: 'Loading...', loading_n: 'Loading... {n} items',
+      no_channel: 'This account has no YouTube channel. It will be saved as a temporary guest account.',
+      no_channel_link: 'Create a channel',
       err_expired: 'The sign-in token is missing or expired. This action needs you to sign in again. (Loading again replaces the current data.)',
       err_403: 'Access denied (403). Check that the API is enabled and that your account is registered as a test user.', detail: ' Details: ',
       err_load: 'An error occurred while loading data ({msg}).',
@@ -499,6 +503,27 @@
   let observer;
 
   function showError(msg){ errMsg.style.display='block'; errMsg.textContent = msg; }
+  function showNoChannelNote(){
+    let el = document.getElementById('noChannelNote');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'noChannelNote';
+      el.className = 'err-msg';
+      errMsg.insertAdjacentElement('afterend', el);
+    }
+    el.textContent = t('no_channel') + ' ';
+    const a = document.createElement('a');
+    a.href = 'https://www.youtube.com/create_channel';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = t('no_channel_link');
+    el.appendChild(a);
+    el.style.display = 'block';
+  }
+  function hideNoChannelNote(){
+    const el = document.getElementById('noChannelNote');
+    if(el) el.style.display = 'none';
+  }
   function clearError(){ errMsg.style.display='none'; errMsg.textContent=''; }
   function setStatus(msg){ statusLine.style.display = msg ? 'block' : 'none'; statusLine.textContent = msg; }
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -833,6 +858,7 @@
             console.log('--- [STAGE 2: Brand Account Details] ---');
             console.log('Channel Data:', data);
 
+            hideNoChannelNote();
             let channelId, channelTitle;
             if (data.items && data.items.length > 0) {
                 channelId = data.items[0].id;
@@ -848,6 +874,7 @@
                 n++;
                 const d = new Date();
                 const mmdd = String(d.getMonth()+1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+                showNoChannelNote();
                 channelId = 'guest_' + n;
                 channelTitle = 'guest' + n + '(' + mmdd + ')';
             }
