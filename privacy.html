@@ -32,7 +32,7 @@
   <!-- ===================== 한국어 ===================== -->
   <div data-lang="ko">
     <h1>개인정보처리방침</h1>
-    <p class="meta">시행일: 2026년 10월 18일 · 서비스 주소: <a href="https://mytubelib.com/">https://mytubelib.com/</a></p>
+    <p class="meta">시행일: 2026년 10월 26일 · 서비스 주소: <a href="https://mytubelib.com/">https://mytubelib.com/</a></p>
 
     <p>"MyTubeLib"(이하 "본 앱")는 사용자가 본인의 YouTube 계정에 있는 좋아요·싫어요 영상, 재생목록, 구독 채널을 한곳에서 검색하고 정리해 볼 수 있게 해 주는 웹 페이지입니다. 본 방침은 본 앱이 어떤 정보에 접근하고, 어떻게 쓰고, 어디에 보관하는지 설명합니다.</p>
 
@@ -55,7 +55,20 @@
       <li><b>환경 설정</b>: 언어와 테마 선택은 이 기기의 브라우저(localStorage/IndexedDB)에만 저장됩니다.</li>
     </ul>
 
-    <h2>4. 제3자 제공 및 공유</h2>
+    <h2>4. 데이터 보호 방법 (보안 조치)</h2>
+    <p>본 앱은 사용자의 YouTube 데이터를 다음과 같은 방법으로 보호합니다.</p>
+    <ul>
+      <li><b>서버 저장 없음</b>: 별도의 서버·데이터베이스가 없어 운영자의 시스템에 사용자 데이터가 저장되거나 유출될 경로 자체가 없습니다. 데이터는 사용자의 브라우저 안에서만 처리됩니다.</li>
+      <li><b>전송 구간 암호화</b>: 본 앱의 페이지와 Google·YouTube API와의 통신은 HTTPS(TLS)로 암호화됩니다.</li>
+      <li><b>최소 권한</b>: 읽기 전용 권한(<code>youtube.readonly</code>) 하나만 요청하며, 이메일·프로필 등 다른 계정 정보는 요청하지 않고 어떤 데이터도 수정하지 않습니다.</li>
+      <li><b>토큰 보호</b>: 액세스 토큰은 브라우저 세션 저장소에서만 짧게 사용하고, 데이터 불러오기가 끝나면 Google에 폐기를 요청한 뒤 즉시 삭제합니다. 토큰은 장기 저장하거나 외부로 전송하지 않습니다.</li>
+      <li><b>데이터 격리</b>: 임시 데이터는 세션 저장소에, 사용자가 직접 저장한 데이터는 해당 기기의 IndexedDB에만 보관되며, 다른 사이트나 외부 서버와 공유되지 않습니다. 브라우저의 동일 출처 정책으로 다른 웹사이트는 이 데이터에 접근할 수 없습니다.</li>
+      <li><b>웹 취약점 대응</b>: 화면에 표시하는 모든 외부 데이터(영상 제목, 채널 이름 등)는 HTML 이스케이프 처리하여 스크립트가 실행되지 않게 하며, 인라인 이벤트 핸들러를 사용하지 않습니다(XSS 방지).</li>
+      <li><b>접근 통제</b>: 사용자 데이터에 접근하는 운영자 계정·서버·관리자 화면이 존재하지 않습니다. 소스 코드 저장소에는 사용자 데이터가 포함되지 않으며, 저장소 변경은 운영자 계정(2단계 인증 권장)으로만 가능합니다.</li>
+      <li><b>사용자 통제</b>: 사용자는 언제든 저장된 데이터를 삭제하고 Google 계정 설정에서 접근 권한을 철회할 수 있습니다.</li>
+    </ul>
+
+    <h2>5. 제3자 제공 및 공유</h2>
     <p>운영자는 사용자의 YouTube 데이터를 제3자에게 제공·판매·공유하지 않습니다. 다만 본 앱을 사용할 때 다음 외부 서비스와 통신이 발생합니다.</p>
     <ul>
       <li>Google 로그인 및 YouTube Data API — 인증과 데이터 조회 (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 개인정보처리방침</a>)</li>
@@ -63,30 +76,30 @@
       <li>YouTube — 영상 썸네일 및 영상 재생 시</li>
     </ul>
 
-    <h2>5. Google API 서비스 사용자 데이터 정책 준수</h2>
+    <h2>6. Google API 서비스 사용자 데이터 정책 준수</h2>
     <div class="lim">본 앱이 Google API로부터 받은 정보의 사용 및 다른 앱으로의 전송은 <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API 서비스 사용자 데이터 정책</a>(제한적 사용 요건 포함)을 준수합니다.</div>
 
-    <h2>6. 사용자의 권리와 데이터 삭제</h2>
+    <h2>7. 사용자의 권리와 데이터 삭제</h2>
     <ul>
       <li><b>임시 데이터</b>: 탭·브라우저를 닫으면 삭제됩니다.</li>
       <li><b>저장된 데이터</b>: 앱 목록의 "삭제" 버튼으로 삭제하거나, 브라우저의 사이트 데이터 삭제로 지울 수 있습니다.</li>
       <li><b>접근 권한 철회</b>: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google 계정 &gt; 보안 &gt; 타사 앱 액세스</a>에서 언제든 본 앱의 권한을 제거할 수 있습니다.</li>
     </ul>
 
-    <h2>7. 아동</h2>
+    <h2>8. 아동</h2>
     <p>본 앱은 만 13세 미만 아동을 대상으로 하지 않으며, 아동의 정보를 의도적으로 수집하지 않습니다.</p>
 
-    <h2>8. 방침의 변경</h2>
+    <h2>9. 방침의 변경</h2>
     <p>방침이 바뀌면 이 페이지를 갱신하고 시행일을 수정합니다.</p>
 
-    <h2>9. 문의</h2>
+    <h2>10. 문의</h2>
     <p>개인정보 관련 문의: <a href="mailto:mytubelib@gmail.com">mytubelib@gmail.com</a></p>
   </div>
 
   <!-- ===================== English ===================== -->
   <div data-lang="en">
     <h1>Privacy Policy</h1>
-    <p class="meta">Effective date: October 18, 2026 · Service URL: <a href="https://mytubelib.com/">https://mytubelib.com/</a></p>
+    <p class="meta">Effective date: October 26, 2026 · Service URL: <a href="https://mytubelib.com/">https://mytubelib.com/</a></p>
 
     <p>"MyTubeLib" (the "App") is a web page that lets you search and browse the videos you liked or disliked, your playlists, and your subscriptions in your own YouTube account. This policy explains what information the App accesses, how it is used, and where it is kept.</p>
 
@@ -109,7 +122,20 @@
       <li><b>Preferences</b>: your language and theme choices are stored only in this device's browser (localStorage/IndexedDB).</li>
     </ul>
 
-    <h2>4. Sharing with third parties</h2>
+    <h2>4. How we protect your data (security measures)</h2>
+    <p>The App protects your YouTube data in the following ways.</p>
+    <ul>
+      <li><b>No server-side storage</b>: There is no backend server or database, so there is no place where user data is stored or could be leaked from the operator's systems. Data is processed only inside your browser.</li>
+      <li><b>Encryption in transit</b>: The App's pages and all communication with the Google and YouTube APIs are encrypted with HTTPS (TLS).</li>
+      <li><b>Least privilege</b>: The App requests a single read-only scope (<code>youtube.readonly</code>), does not request your email, profile or other account details, and never modifies any data.</li>
+      <li><b>Token protection</b>: The access token is used only briefly in the browser's session storage. When loading finishes the App asks Google to revoke it and deletes it immediately. Tokens are never stored long-term or sent anywhere else.</li>
+      <li><b>Data isolation</b>: Temporary data lives in session storage, and data you choose to save lives only in IndexedDB on your device. It is not shared with other sites or external servers, and the browser's same-origin policy prevents other websites from reading it.</li>
+      <li><b>Web vulnerability defenses</b>: All external data shown on screen (video titles, channel names, etc.) is HTML-escaped so scripts cannot run, and inline event handlers are not used (XSS prevention).</li>
+      <li><b>Access control</b>: No operator account, server or admin screen exists that can access user data. The source repository contains no user data, and changes to it can be made only through the operator's account (two-factor authentication recommended).</li>
+      <li><b>User control</b>: You can delete saved data at any time and revoke the App's access in your Google Account settings.</li>
+    </ul>
+
+    <h2>5. Sharing with third parties</h2>
     <p>The operator does not provide, sell or share your YouTube data with any third party. Using the App does involve communication with these external services:</p>
     <ul>
       <li>Google Sign-In and the YouTube Data API — authentication and data retrieval (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>)</li>
@@ -117,23 +143,23 @@
       <li>YouTube — for video thumbnails and when you play a video</li>
     </ul>
 
-    <h2>5. Compliance with the Google API Services User Data Policy</h2>
+    <h2>6. Compliance with the Google API Services User Data Policy</h2>
     <div class="lim">The App's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</div>
 
-    <h2>6. Your choices and deleting data</h2>
+    <h2>7. Your choices and deleting data</h2>
     <ul>
       <li><b>Temporary data</b>: deleted when you close the tab or browser.</li>
       <li><b>Saved data</b>: delete it with the "Delete" button in the App's list, or clear the site's data in your browser.</li>
       <li><b>Revoking access</b>: you can remove the App's access at any time under <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account &gt; Security &gt; Third-party access</a>.</li>
     </ul>
 
-    <h2>7. Children</h2>
+    <h2>8. Children</h2>
     <p>The App is not directed to children under 13 and does not knowingly collect information from children.</p>
 
-    <h2>8. Changes to this policy</h2>
+    <h2>9. Changes to this policy</h2>
     <p>If this policy changes, this page will be updated and the effective date revised.</p>
 
-    <h2>9. Contact</h2>
+    <h2>10. Contact</h2>
     <p>Privacy questions: <a href="mailto:mytubelib@gmail.com">mytubelib@gmail.com</a></p>
   </div>
 </div>
